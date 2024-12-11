@@ -41,11 +41,16 @@ export const setupPrettier = async () => {
 	}
 
 	// Create the `.prettierrc.json` file
-	writeOrUpdateFile('.prettierrc.json', prettierConfig, {
-		fileUpdated: 'Prettier configuration updated successfully!',
-		fileSkipped: 'Prettier configuration already exists.',
-		fileCreated: 'Prettier configuration created successfully!',
-	})
+	writeOrUpdateFile(
+		'.prettierrc.json',
+		prettierConfig,
+		{
+			fileUpdated: 'Prettier configuration updated successfully!',
+			fileSkipped: 'Prettier configuration already exists.',
+			fileCreated: 'Prettier configuration created successfully!',
+		},
+		true
+	)
 
 	// Add "prettify" script to package.json
 	addPackageJsonScript('prettify', 'prettier --write .')

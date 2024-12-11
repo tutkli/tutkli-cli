@@ -7,7 +7,7 @@ import path from 'path'
  * @param relativePath - The relative path to the file (e.g., ".prettierrc.json").
  * @param content - The content to write to the file.
  * @param messages
- *
+ * @param overwrite
  * @returns A boolean indicating whether the file was successfully created or overwritten.
  */
 export function writeOrUpdateFile(
@@ -17,12 +17,13 @@ export function writeOrUpdateFile(
 		fileUpdated: string
 		fileSkipped: string
 		fileCreated: string
-	}
+	},
+	overwrite: boolean = false
 ): boolean {
 	const absolutePath = path.resolve(relativePath)
 
 	// Check if the file already exists
-	if (fs.existsSync(absolutePath)) {
+	if (fs.existsSync(absolutePath) && !overwrite) {
 		const existingContent = fs.readFileSync(absolutePath, 'utf8')
 
 		// Split `content` into lines and check if they're already in the file

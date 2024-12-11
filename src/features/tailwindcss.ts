@@ -1,5 +1,3 @@
-import fs from 'fs'
-import path from 'path'
 import { writeOrUpdateFile } from '../utils/file.ts'
 import { askQuestion, askYesNoQuestion } from '../utils/prompt.ts'
 import { runCLICommand, runInstallCommand } from '../utils/run-command.ts'
@@ -48,15 +46,16 @@ export const setupTailwind = async (): Promise<void> => {
 			await runCLICommand('tailwindcss init')
 			console.log('Tailwind configuration file created successfully!')
 
-			const configPath = path.resolve(process.cwd(), 'tailwind.config.js')
-			if (fs.existsSync(configPath)) {
-				fs.writeFileSync(configPath, tailwindConfigContent, 'utf8')
-				console.log('Tailwind configuration file updated successfully!')
-			} else {
-				console.error(
-					'Error: Unable to find tailwind.config.js after initialization.'
-				)
-			}
+			writeOrUpdateFile(
+				'tailwind.config.js',
+				tailwindConfigContent,
+				{
+					fileUpdated: 'Tailwind configuration file updated successfully!',
+					fileSkipped: 'Tailwind configuration file already exists.',
+					fileCreated: 'Tailwind configuration file created successfully!',
+				},
+				true
+			)
 
 			// Prompt the user for the styles.css path
 			const stylesPath = await askQuestion(
