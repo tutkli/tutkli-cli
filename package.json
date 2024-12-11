@@ -5,7 +5,7 @@
 	"type": "module",
 	"module": "src/index.ts",
 	"bin": {
-		"tutkli-config": "src/index.ts"
+		"tutkli-config": "dist/index.js"
 	},
 	"description": "Tutkli personal CLI to set up environments with different packages",
 	"license": "MIT",
@@ -30,5 +30,10 @@
 	},
 	"peerDependencies": {
 		"typescript": "^5.0.0"
-	}
+	},
+	"files": [
+		"dist/",
+		"README.md",
+		"LICENSE"
+	]
 }
