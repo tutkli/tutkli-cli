@@ -1,11 +1,33 @@
 {
-  "name": "@tutkli/config",
-  "module": "index.ts",
-  "type": "module",
-  "devDependencies": {
-    "@types/bun": "latest"
-  },
-  "peerDependencies": {
-    "typescript": "^5.0.0"
-  }
+	"name": "tutkli-config",
+	"version": "0.0.1",
+	"author": "Clara Castillo",
+	"type": "module",
+	"module": "src/index.ts",
+	"bin": {
+		"tutkli-config": "src/index.ts"
+	},
+	"description": "Tutkli personal CLI to set up environments with different packages",
+	"license": "MIT",
+	"scripts": {
+		"dev": "node dist/index.js",
+		"build": "bun build ./src/index.ts --outdir ./dist --target node",
+		"prettify": "prettier --write ."
+	},
+	"dependencies": {
+		"@inquirer/core": "^10.1.1",
+		"@inquirer/prompts": "^7.2.0"
+	},
+	"devDependencies": {
+		"@types/bun": "latest",
+		"@types/inquirer": "^9.0.7",
+		"@types/node": "^22.10.2",
+		"prettier": "^3.4.2",
+		"prettier-plugin-organize-imports": "^4.1.0",
+		"prettier-plugin-tailwindcss": "^0.6.9",
+		"typescript": "^5.7.2"
+	},
+	"peerDependencies": {
+		"typescript": "^5.0.0"
+	}
 }
