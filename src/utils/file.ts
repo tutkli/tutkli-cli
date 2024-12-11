@@ -24,14 +24,26 @@ export function writeOrUpdateFile(
 	// Check if the file already exists
 	if (fs.existsSync(absolutePath)) {
 		const existingContent = fs.readFileSync(absolutePath, 'utf8')
-		if (!existingContent.includes(content)) {
-			fs.appendFileSync(absolutePath, content)
-			console.log(messages.fileUpdated)
-			return true
-		} else {
+
+		// Split `content` into lines and check if they're already in the file
+		const linesToAdd = content.split(/\r?\n/).filter(line => line.trim() !== '') // Non-empty lines
+		const existingLines = new Set(
+			existingContent.split(/\r?\n/).map(line => line.trim())
+		)
+
+		const allLinesExist = linesToAdd.every(line =>
+			existingLines.has(line.trim())
+		)
+
+		if (allLinesExist) {
 			console.log(messages.fileSkipped)
-			return false
+			return false // Content already exists, skip updating
 		}
+
+		// Append content to the file if it doesn't exist
+		fs.appendFileSync(absolutePath, content)
+		console.log(messages.fileUpdated)
+		return true
 	}
 
 	try {
