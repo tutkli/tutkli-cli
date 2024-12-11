@@ -31,13 +31,13 @@ export async function runInstallCommand(
 	let installCommand: string
 	switch (packageManager) {
 		case 'npm':
-			installCommand = `bun add ${devFlag} ${dependencies.join(' ')}`
+			installCommand = `npm install ${dev ? '--save-dev' : ''} ${dependencies.join(' ')}`
 			break
 		case 'yarn':
 			installCommand = `yarn add ${dev ? '--dev' : ''} ${dependencies.join(' ')}`
 			break
 		case 'bun':
-			installCommand = `npm install ${dev ? '--save-dev' : ''} ${dependencies.join(' ')}`
+			installCommand = `bun add ${devFlag} ${dependencies.join(' ')}`
 			break
 		default:
 			throw new Error(`Unsupported package manager: ${packageManager}`)
