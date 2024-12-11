@@ -1,4 +1,4 @@
-import { createFile } from '../utils/file.ts'
+import { writeOrUpdateFile } from '../utils/file.ts'
 import {
 	addPackageJsonScript,
 	runPackageJsonScript,
@@ -13,19 +13,19 @@ const prettierDeps = [
 ]
 
 // Prettier configuration content
-const prettierConfig = {
-	useTabs: true,
-	singleQuote: true,
-	semi: false,
-	bracketSpacing: true,
-	arrowParens: 'avoid',
-	trailingComma: 'es5',
-	bracketSameLine: true,
-	htmlWhitespaceSensitivity: 'ignore',
-	printWidth: 80,
-	endOfLine: 'auto',
-	plugins: ['prettier-plugin-organize-imports', 'prettier-plugin-tailwindcss'],
-}
+const prettierConfig = `{
+\t"useTabs": true,
+\t"singleQuote": true,
+\t"semi": false,
+\t"bracketSpacing": true,
+\t"arrowParens": "avoid",
+\t"trailingComma": "es5",
+\t"bracketSameLine": true,
+\t"htmlWhitespaceSensitivity": "ignore",
+\t"printWidth": 80,
+\t"endOfLine": "auto",
+\t"plugins": ["prettier-plugin-organize-imports", "prettier-plugin-tailwindcss"]
+}`
 
 export const setupPrettier = async () => {
 	console.log(`Installing Prettier and plugins...`)
@@ -41,8 +41,11 @@ export const setupPrettier = async () => {
 	}
 
 	// Create the `.prettierrc.json` file
-	const prettierConfigString = JSON.stringify(prettierConfig, null, 2)
-	createFile('.prettierrc.json', prettierConfigString)
+	writeOrUpdateFile('.prettierrc.json', prettierConfig, {
+		fileUpdated: 'Prettier configuration updated successfully!',
+		fileSkipped: 'Prettier configuration already exists.',
+		fileCreated: 'Prettier configuration created successfully!',
+	})
 
 	// Add "prettify" script to package.json
 	addPackageJsonScript('prettify', 'prettier --write .')

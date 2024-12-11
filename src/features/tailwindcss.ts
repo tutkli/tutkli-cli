@@ -1,5 +1,6 @@
 import fs from 'fs'
 import path from 'path'
+import { writeOrUpdateFile } from '../utils/file.ts'
 import { askQuestion, askYesNoQuestion } from '../utils/prompt.ts'
 import { runCLICommand, runInstallCommand } from '../utils/run-command.ts'
 
@@ -62,7 +63,11 @@ export const setupTailwind = async (): Promise<void> => {
 				'Please specify the path to your styles.css file:',
 				'./src/styles.css'
 			)
-			addTailwindDirectives(stylesPath)
+			writeOrUpdateFile(stylesPath, tailwindDirectives, {
+				fileUpdated: `Tailwind CSS directives added to existing file: ${stylesPath}`,
+				fileSkipped: `The styles.css file already contains Tailwind CSS directives. No changes made.`,
+				fileCreated: `New styles.css file created and updated at: ${stylesPath}`,
+			})
 		} catch (error) {
 			console.error(
 				`Error during Tailwind CSS initialization: ${error instanceof Error ? error.message : String(error)}`
@@ -70,33 +75,5 @@ export const setupTailwind = async (): Promise<void> => {
 		}
 	} else {
 		console.log('Skipping Tailwind configuration.')
-	}
-}
-
-function addTailwindDirectives(stylesPath: string) {
-	const resolvedStylesPath = path.resolve(process.cwd(), stylesPath)
-
-	if (fs.existsSync(resolvedStylesPath)) {
-		// Append Tailwind CSS directives if they don't already exist
-		const existingContent = fs.readFileSync(resolvedStylesPath, 'utf8')
-		if (
-			!existingContent.includes('@tailwind base') ||
-			!existingContent.includes('@tailwind components') ||
-			!existingContent.includes('@tailwind utilities')
-		) {
-			fs.appendFileSync(resolvedStylesPath, tailwindDirectives)
-			console.log(
-				`Tailwind CSS directives added to existing file: ${stylesPath}`
-			)
-		} else {
-			console.log(
-				`The styles.css file already contains Tailwind CSS directives. No changes made.`
-			)
-		}
-	} else {
-		// Create the styles.css file and add Tailwind directives
-		fs.mkdirSync(path.dirname(resolvedStylesPath), { recursive: true }) // Ensure any missing directories are created
-		fs.writeFileSync(resolvedStylesPath, tailwindDirectives, 'utf8')
-		console.log(`New styles.css file created and updated at: ${stylesPath}`)
 	}
 }

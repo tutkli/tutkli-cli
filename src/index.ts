@@ -1,12 +1,14 @@
 #!/usr/bin/env bun
 
 import { select } from '@inquirer/prompts'
+import { setupCVA } from './features/cva.ts'
 import { setupPrettier } from './features/prettier'
 import { setupTailwind } from './features/tailwindcss.ts'
 
 const features = {
 	prettier: setupPrettier,
 	tailwind: setupTailwind,
+	cva: setupCVA,
 }
 
 type Features = keyof typeof features | 'exit'
@@ -17,6 +19,7 @@ async function ask() {
 		choices: [
 			{ name: 'Prettier', value: 'prettier' },
 			{ name: 'TailwindCSS', value: 'tailwind' },
+			{ name: 'CVA', value: 'cva' },
 			{ name: 'Exit', value: 'exit' },
 		],
 		loop: true,
