@@ -2,9 +2,11 @@
 
 import { select } from '@inquirer/prompts'
 import { setupPrettier } from './features/prettier'
+import { setupTailwind } from './features/tailwindcss.ts'
 
 const features = {
 	prettier: setupPrettier,
+	tailwind: setupTailwind,
 }
 
 type Features = keyof typeof features | 'exit'
@@ -14,6 +16,7 @@ async function ask() {
 		message: 'Which package do you want to install?',
 		choices: [
 			{ name: 'Prettier', value: 'prettier' },
+			{ name: 'TailwindCSS', value: 'tailwind' },
 			{ name: 'Exit', value: 'exit' },
 		],
 		loop: true,

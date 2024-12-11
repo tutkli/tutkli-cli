@@ -3,8 +3,7 @@ import {
 	addPackageJsonScript,
 	runPackageJsonScript,
 } from '../utils/package-json.ts'
-import { getInstallCommand } from '../utils/package-manager.ts'
-import { runCommand } from '../utils/run-command'
+import { runInstallCommand } from '../utils/run-command'
 
 // Prettier and plugins to install
 const prettierDeps = [
@@ -31,20 +30,9 @@ const prettierConfig = {
 export const setupPrettier = async () => {
 	console.log(`Installing Prettier and plugins...`)
 
-	// Get the installation command
-	let installCommand: string
-	try {
-		installCommand = getInstallCommand(prettierDeps, true)
-	} catch (error) {
-		console.error(
-			`Failed to get the install command: ${error instanceof Error ? error.message : String(error)}`
-		)
-		return
-	}
-
 	// Run the installation command
 	try {
-		await runCommand(installCommand)
+		await runInstallCommand(prettierDeps, true)
 	} catch (error) {
 		console.error(
 			`Error while installing Prettier dependencies: ${error instanceof Error ? error.message : String(error)}`
