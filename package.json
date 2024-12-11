@@ -12,6 +12,7 @@
 	"scripts": {
 		"dev": "node dist/index.js",
 		"build": "bun build ./src/index.ts --outdir ./dist --target node",
+		"build:watch": "bun build ./src/index.ts --outdir ./dist --target node --watch",
 		"prettify": "prettier --write ."
 	},
 	"dependencies": {
