@@ -26,15 +26,15 @@ export async function runInstallCommand(
 	dev: boolean = true
 ): Promise<void> {
 	const packageManager = detectPackageManager()
-	const devFlag = dev ? '--dev' : ''
+	const devFlag = dev ? '-D' : ''
 
 	let installCommand: string
 	switch (packageManager) {
 		case 'npm':
-			installCommand = `npm install ${dev ? '--save-dev' : ''} ${dependencies.join(' ')}`
+			installCommand = `npm install ${devFlag} ${dependencies.join(' ')}`
 			break
 		case 'yarn':
-			installCommand = `yarn add ${dev ? '--dev' : ''} ${dependencies.join(' ')}`
+			installCommand = `yarn add ${devFlag} ${dependencies.join(' ')}`
 			break
 		case 'bun':
 			installCommand = `bun add ${devFlag} ${dependencies.join(' ')}`
