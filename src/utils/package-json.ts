@@ -1,8 +1,6 @@
-import chalk from 'chalk'
 import fs from 'fs'
 import path from 'path'
 import { detectPackageManager } from './package-manager.ts'
-import { askYesNoQuestion } from './prompt.ts'
 import { runCommand } from './run-command.ts'
 
 /**
@@ -21,10 +19,9 @@ export function addPackageJsonScript(
 
 	// Check if package.json exists
 	if (!fs.existsSync(packageJsonPath)) {
-		console.error(
-			`Error: package.json not found in the current project directory.`
+		throw new Error(
+			'Error: package.json not found in the current project directory.'
 		)
-		return
 	}
 
 	try {
@@ -43,7 +40,6 @@ export function addPackageJsonScript(
 			JSON.stringify(packageJson, null, 2),
 			'utf8'
 		)
-		console.log(`Added script "${scriptName}" in package.json`)
 	} catch (error) {
 		console.error(
 			`Error reading or updating package.json: ${error instanceof Error ? error.message : String(error)}`
@@ -55,12 +51,8 @@ export function addPackageJsonScript(
  * Runs a package.json script using the appropriate package manager with optional confirmation.
  *
  * @param scriptName - The name of the script to run (e.g., "prettify").
- * @param askBeforeRun - Whether to ask the user for confirmation before running the script (default: false).
  */
-export async function runPackageJsonScript(
-	scriptName: string,
-	askBeforeRun: boolean = false
-): Promise<void> {
+export async function runPackageJsonScript(scriptName: string): Promise<void> {
 	const packageManager = detectPackageManager()
 
 	let command: string
@@ -78,22 +70,8 @@ export async function runPackageJsonScript(
 			throw new Error(`Unsupported package manager: ${packageManager}`)
 	}
 
-	if (askBeforeRun) {
-		const shouldRun = await askYesNoQuestion(
-			`Would you like to run the '${scriptName}' script now?`
-		)
-		if (!shouldRun) {
-			console.log(`Skipping '${scriptName}' script.`)
-			return
-		}
-	}
-
 	try {
-		console.log(`Running '${scriptName}' script with ${packageManager}...`)
 		await runCommand(command)
-		console.log(
-			chalk.bgGreen.black(`Script '${scriptName}' executed successfully!`)
-		)
 	} catch (error) {
 		console.error(
 			`Failed to run '${scriptName}' script: ${

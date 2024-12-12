@@ -8,7 +8,6 @@ export function runCommand(command: string): Promise<void> {
 				reject(error)
 				return
 			}
-			console.log(`stdout: ${stdout}`)
 			resolve()
 		})
 	})

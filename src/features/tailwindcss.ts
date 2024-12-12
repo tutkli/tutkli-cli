@@ -1,14 +1,15 @@
-import chalk from 'chalk'
 import { writeOrUpdateFile } from '../utils/file.ts'
+import { showErrorText, showSuccessText, showText } from '../utils/messages.ts'
 import { askQuestion, askYesNoQuestion } from '../utils/prompt.ts'
-import { runCLICommand, runInstallCommand } from '../utils/run-command.ts'
+import { runInstallCommand } from '../utils/run-command.ts'
+import { spinner } from '../utils/spinner.ts'
 
 const tailwindDeps = ['tailwindcss']
 
 /**
  * Tailwind configuration content to write to tailwind.config.js
  */
-const tailwindConfigContent = `/** @type {import('tailwindcss').Config} */
+const tailwindConfig = `/** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
     "./src/**/*.{html,ts}",
@@ -22,7 +23,7 @@ module.exports = {
 
 const tailwindDirectives = `@tailwind base;\n@tailwind components;\n@tailwind utilities;\n`
 
-const tailwindMaterialFixes = `.mdc-notched-outline__notch {
+const tailwindMaterialFixes = `\n.mdc-notched-outline__notch {
   border-style: none;
 }
 .mat-mdc-icon-button {
@@ -30,62 +31,60 @@ const tailwindMaterialFixes = `.mdc-notched-outline__notch {
 }\n`
 
 export const setupTailwind = async (): Promise<void> => {
-	console.log(chalk.bgYellow.black(`Setting up TailwindCSS...`))
+	showText(' TailwindCSS ', { bgColor: '#2982AF', color: '#E2E8F0' })
 
-	// Run the installation command
+	let shouldRunInit: boolean = true
+	let stylesPath: string = './src/styles.css'
+	let hasNgMaterial: boolean = false
+
+	// Prompt the user if they want to run tailwind init
+	shouldRunInit = await askYesNoQuestion(
+		'Would you like to run `tailwindcss init` to create a Tailwind configuration file?',
+		true
+	)
+
+	if (shouldRunInit) {
+		// Prompt the user for the styles.css path
+		stylesPath = await askQuestion(
+			'Please specify the path to your styles.css file:',
+			'./src/styles.css'
+		)
+		hasNgMaterial = await askYesNoQuestion(
+			'Are you using Tailwind alongside Angular Material 3?',
+			false
+		)
+	}
+
 	try {
-		await runInstallCommand(tailwindDeps, true)
+		// Install dependencies
+		await spinner({
+			loadingText: 'Installing dependencies....',
+			successText: 'Dependencies installed',
+			fn: () => runInstallCommand(tailwindDeps, true),
+		})
+
+		if (shouldRunInit) {
+			// Run tailwind init
+			await spinner({
+				loadingText: 'Initializing TailwindCSS...',
+				successText: 'TailwindCSS initialized',
+				fn: () => writeOrUpdateFile('tailwind.config.js', tailwindConfig, true),
+			})
+
+			// Add tailwind directives
+			const styleContent = `${tailwindDirectives}${hasNgMaterial ? tailwindMaterialFixes : ''}`
+			await spinner({
+				loadingText: 'Adding TailwindCSS directive...',
+				successText: 'TailwindCSS directives added',
+				fn: () => writeOrUpdateFile(stylesPath, styleContent),
+			})
+		}
 	} catch (error) {
-		console.error(
-			`Error while installing TailwindCSS dependencies: ${error instanceof Error ? error.message : String(error)}`
+		showErrorText(
+			`Error while setting up TailwindCSS: ${error instanceof Error ? error.message : String(error)}`
 		)
 		return
 	}
 
-	console.log(chalk.bgGreen.black('TailwindCSS installed successfully!'))
-
-	// Prompt the user if they want to run tailwind init
-	const shouldRunInit = await askYesNoQuestion(
-		'Would you like to run `tailwindcss init` to create a Tailwind configuration file?'
-	)
-	if (shouldRunInit) {
-		try {
-			console.log('Initializing TailwindCSS...')
-			await runCLICommand('tailwindcss init')
-
-			writeOrUpdateFile(
-				'tailwind.config.js',
-				tailwindConfigContent,
-				{
-					fileUpdated: 'Tailwind configuration file updated successfully!',
-					fileSkipped: 'Tailwind configuration file already exists.',
-					fileCreated: 'Tailwind configuration file created successfully!',
-				},
-				true
-			)
-
-			// Prompt the user for the styles.css path
-			const stylesPath = await askQuestion(
-				'Please specify the path to your styles.css file:',
-				'./src/styles.css'
-			)
-			const hasNgMaterial = await askYesNoQuestion(
-				'Are you using Tailwind alongside Angular Material 3?',
-				false
-			)
-			const styleContent = `${tailwindDirectives}${hasNgMaterial ? tailwindMaterialFixes : ''}`
-
-			writeOrUpdateFile(stylesPath, styleContent, {
-				fileUpdated: `Tailwind CSS directives added to existing file: ${stylesPath}`,
-				fileSkipped: `The styles.css file already contains Tailwind CSS directives. No changes made.`,
-				fileCreated: `New styles.css file created and updated at: ${stylesPath}`,
-			})
-		} catch (error) {
-			console.error(
-				`Error during Tailwind CSS initialization: ${error instanceof Error ? error.message : String(error)}`
-			)
-		}
-	} else {
-		console.log('Skipping Tailwind configuration.')
-	}
+	showSuccessText('TailwindCSS installed successfully!')
 }

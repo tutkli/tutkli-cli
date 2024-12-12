@@ -1,10 +1,12 @@
-import chalk from 'chalk'
 import { writeOrUpdateFile } from '../utils/file.ts'
+import { showErrorText, showSuccessText, showText } from '../utils/messages.ts'
 import {
 	addPackageJsonScript,
 	runPackageJsonScript,
 } from '../utils/package-json.ts'
+import { askYesNoQuestion } from '../utils/prompt.ts'
 import { runInstallCommand } from '../utils/run-command'
+import { spinner } from '../utils/spinner.ts'
 
 // Prettier and plugins to install
 const prettierDeps = [
@@ -29,37 +31,48 @@ const prettierConfig = `{
 }`
 
 export const setupPrettier = async () => {
-	console.log(chalk.bgYellow.black('Setting up Prettier and plugins...'))
+	showText(' Prettier ', { bgColor: '#A04967' })
 
-	// Run the installation command
-	try {
-		await runInstallCommand(prettierDeps, true)
-	} catch (error) {
-		console.error(
-			`Error while installing Prettier dependencies: ${error instanceof Error ? error.message : String(error)}`
-		)
-		return
-	}
-
-	// Add "prettify" script to package.json
-	addPackageJsonScript('prettify', 'prettier --write .')
-
-	// Create the `.prettierrc.json` file
-	writeOrUpdateFile(
-		'.prettierrc.json',
-		prettierConfig,
-		{
-			fileUpdated: 'Prettier configuration updated successfully!',
-			fileSkipped: 'Prettier configuration already exists.',
-			fileCreated: 'Prettier configuration created successfully!',
-		},
+	const runPrettify = await askYesNoQuestion(
+		'Would you like to run the "prettify" script after installation?',
 		true
 	)
 
-	// Prompt the user and run the "prettify" script if confirmed
 	try {
-		await runPackageJsonScript('prettify', true)
+		// Install dependencies
+		await spinner({
+			loadingText: 'Installing dependencies...',
+			successText: 'Dependencies installed',
+			fn: () => runInstallCommand(prettierDeps, true),
+		})
+
+		// Add prettify script
+		await spinner({
+			loadingText: 'Adding "prettify" script...',
+			successText: 'Prettify script added',
+			fn: () => addPackageJsonScript('prettify', 'prettier --write .'),
+		})
+
+		// Create .prettierrc.json file
+		await spinner({
+			loadingText: 'Creating .prettierrc.json file....',
+			successText: '.prettierrc.json file created',
+			fn: () => writeOrUpdateFile('.prettierrc.json', prettierConfig, true),
+		})
+
+		if (runPrettify) {
+			// Run prettify script
+			await spinner({
+				loadingText: 'Running "prettify" script...',
+				successText: 'Ran Prettify script',
+				fn: () => runPackageJsonScript('prettify'),
+			})
+		}
 	} catch (error) {
-		console.error("An error occurred while running the 'prettify' script.")
+		showErrorText(
+			`Error while setting up Prettier: ${error instanceof Error ? error.message : String(error)}`
+		)
 	}
+
+	showSuccessText('Prettier installed successfully!')
 }
