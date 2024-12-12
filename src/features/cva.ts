@@ -37,6 +37,6 @@ export const setupCVA = async () => {
 	writeOrUpdateFile(cvaUtilPath, cvaUtilContent, {
 		fileUpdated: `CVA util added to existing file: ${cvaUtilPath}`,
 		fileSkipped: `The CVA util file already exists. No changes made.`,
-		fileCreated: `New CVA util file created and updated at: ${cvaUtilPath}`,
+		fileCreated: `New CVA util file created at: ${cvaUtilPath}`,
 	})
 }
