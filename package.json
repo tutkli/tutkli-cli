@@ -1,17 +1,18 @@
 {
-	"name": "tutkli-config",
+	"name": "tutkli-cli",
 	"version": "0.0.1",
 	"author": "Clara Castillo",
 	"type": "module",
-	"module": "src/index.ts",
+	"module": "dist/index.js",
 	"bin": {
-		"tutkli-config": "dist/index.js"
+		"tutkli-cli": "dist/index.js"
 	},
 	"description": "Tutkli personal CLI to set up environments with different packages",
 	"license": "MIT",
 	"scripts": {
 		"dev": "node dist/index.js",
-		"build": "bun build ./src/index.ts --outdir ./dist --target node",
+		"prepublish": "bun run build",
+		"build": "bun bun.build.js",
 		"build:watch": "bun build ./src/index.ts --outdir ./dist --target node --watch",
 		"prettify": "prettier --write ."
 	},
