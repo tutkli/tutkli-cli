@@ -3,7 +3,7 @@
 	"version": "0.0.1",
 	"author": "Clara Castillo",
 	"type": "module",
-	"module": "dist/index.js",
+	"main": "dist/index.js",
 	"bin": {
 		"tutkli-cli": "dist/index.js"
 	},
