@@ -1,3 +1,4 @@
+import chalk from 'chalk'
 import { writeOrUpdateFile } from '../utils/file.ts'
 import { askQuestion } from '../utils/prompt.ts'
 import { runInstallCommand } from '../utils/run-command.ts'
@@ -14,7 +15,7 @@ export const { cva, cx, compose } = defineConfig({
 });`
 
 export const setupCVA = async () => {
-	console.log('Setting up CVA...')
+	console.log(chalk.bgYellow.black('Setting up CVA...'))
 
 	// Run the installation command
 	try {
@@ -26,6 +27,8 @@ export const setupCVA = async () => {
 		return
 	}
 
+	console.log(chalk.bgGreen.black('CVA installed successfully!'))
+
 	// Prompt the user where to add the cva util file
 	const cvaUtilPath = await askQuestion(
 		'Where would you like to add the cva util file?',
@@ -33,7 +36,7 @@ export const setupCVA = async () => {
 	)
 	writeOrUpdateFile(cvaUtilPath, cvaUtilContent, {
 		fileUpdated: `CVA util added to existing file: ${cvaUtilPath}`,
-		fileSkipped: `The cva util file already exists. No changes made.`,
-		fileCreated: `New cva util file created and updated at: ${cvaUtilPath}`,
+		fileSkipped: `The CVA util file already exists. No changes made.`,
+		fileCreated: `New CVA util file created and updated at: ${cvaUtilPath}`,
 	})
 }

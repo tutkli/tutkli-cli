@@ -1,3 +1,4 @@
+import chalk from 'chalk'
 import { writeOrUpdateFile } from '../utils/file.ts'
 import {
 	addPackageJsonScript,
@@ -28,7 +29,7 @@ const prettierConfig = `{
 }`
 
 export const setupPrettier = async () => {
-	console.log(`Installing Prettier and plugins...`)
+	console.log(chalk.bgYellow.black('Setting up Prettier and plugins...'))
 
 	// Run the installation command
 	try {
@@ -39,6 +40,9 @@ export const setupPrettier = async () => {
 		)
 		return
 	}
+
+	// Add "prettify" script to package.json
+	addPackageJsonScript('prettify', 'prettier --write .')
 
 	// Create the `.prettierrc.json` file
 	writeOrUpdateFile(
@@ -51,11 +55,6 @@ export const setupPrettier = async () => {
 		},
 		true
 	)
-
-	// Add "prettify" script to package.json
-	addPackageJsonScript('prettify', 'prettier --write .')
-
-	console.log('Prettier setup completed successfully!')
 
 	// Prompt the user and run the "prettify" script if confirmed
 	try {

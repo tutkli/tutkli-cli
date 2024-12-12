@@ -1,3 +1,4 @@
+import chalk from 'chalk'
 import fs from 'fs'
 import path from 'path'
 import { detectPackageManager } from './package-manager.ts'
@@ -90,7 +91,9 @@ export async function runPackageJsonScript(
 	try {
 		console.log(`Running '${scriptName}' script with ${packageManager}...`)
 		await runCommand(command)
-		console.log(`Script '${scriptName}' executed successfully!`)
+		console.log(
+			chalk.bgGreen.black(`Script '${scriptName}' executed successfully!`)
+		)
 	} catch (error) {
 		console.error(
 			`Failed to run '${scriptName}' script: ${

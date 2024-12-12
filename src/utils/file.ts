@@ -1,3 +1,4 @@
+import chalk from 'chalk'
 import fs from 'fs'
 import path from 'path'
 
@@ -43,14 +44,14 @@ export function writeOrUpdateFile(
 
 		// Append content to the file if it doesn't exist
 		fs.appendFileSync(absolutePath, content)
-		console.log(messages.fileUpdated)
+		console.log(chalk.bgGreen.black(messages.fileUpdated))
 		return true
 	}
 
 	try {
 		fs.mkdirSync(path.dirname(absolutePath), { recursive: true })
 		fs.writeFileSync(absolutePath, content, 'utf8')
-		console.log(messages.fileCreated)
+		console.log(chalk.bgGreen.black(messages.fileCreated))
 		return true
 	} catch (error) {
 		console.error(

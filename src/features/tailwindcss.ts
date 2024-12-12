@@ -1,3 +1,4 @@
+import chalk from 'chalk'
 import { writeOrUpdateFile } from '../utils/file.ts'
 import { askQuestion, askYesNoQuestion } from '../utils/prompt.ts'
 import { runCLICommand, runInstallCommand } from '../utils/run-command.ts'
@@ -22,7 +23,7 @@ module.exports = {
 const tailwindDirectives = `@tailwind base;\n@tailwind components;\n@tailwind utilities;\n`
 
 export const setupTailwind = async (): Promise<void> => {
-	console.log(`Installing TailwindCSS...`)
+	console.log(chalk.bgYellow.black(`Setting up TailwindCSS...`))
 
 	// Run the installation command
 	try {
@@ -34,7 +35,7 @@ export const setupTailwind = async (): Promise<void> => {
 		return
 	}
 
-	console.log('TailwindCSS installed successfully!')
+	console.log(chalk.bgGreen.black('TailwindCSS installed successfully!'))
 
 	// Prompt the user if they want to run tailwind init
 	const shouldRunInit = await askYesNoQuestion(
@@ -44,7 +45,6 @@ export const setupTailwind = async (): Promise<void> => {
 		try {
 			console.log('Initializing TailwindCSS...')
 			await runCLICommand('tailwindcss init')
-			console.log('Tailwind configuration file created successfully!')
 
 			writeOrUpdateFile(
 				'tailwind.config.js',
