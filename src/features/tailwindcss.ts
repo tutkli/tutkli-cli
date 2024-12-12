@@ -22,6 +22,13 @@ module.exports = {
 
 const tailwindDirectives = `@tailwind base;\n@tailwind components;\n@tailwind utilities;\n`
 
+const tailwindMaterialFixes = `.mdc-notched-outline__notch {
+  border-style: none;
+}
+.mat-mdc-icon-button {
+  line-height: normal;
+}\n`
+
 export const setupTailwind = async (): Promise<void> => {
 	console.log(chalk.bgYellow.black(`Setting up TailwindCSS...`))
 
@@ -62,7 +69,13 @@ export const setupTailwind = async (): Promise<void> => {
 				'Please specify the path to your styles.css file:',
 				'./src/styles.css'
 			)
-			writeOrUpdateFile(stylesPath, tailwindDirectives, {
+			const hasNgMaterial = await askYesNoQuestion(
+				'Are you using Tailwind alongside Angular Material 3?',
+				false
+			)
+			const styleContent = `${tailwindDirectives}${hasNgMaterial ? tailwindMaterialFixes : ''}`
+
+			writeOrUpdateFile(stylesPath, styleContent, {
 				fileUpdated: `Tailwind CSS directives added to existing file: ${stylesPath}`,
 				fileSkipped: `The styles.css file already contains Tailwind CSS directives. No changes made.`,
 				fileCreated: `New styles.css file created and updated at: ${stylesPath}`,
