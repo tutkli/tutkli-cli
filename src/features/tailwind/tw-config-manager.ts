@@ -1,4 +1,4 @@
-import type { DepPlugin } from '../../types/registry.types.ts'
+import type { DepPlugin } from '../../types/types.ts'
 import { askYesNoQuestion } from '../../utils/prompt.ts'
 
 export class TailwindConfigManager {

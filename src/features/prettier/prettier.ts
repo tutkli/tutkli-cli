@@ -10,7 +10,7 @@ import {
 } from '../../utils/package-json.ts'
 import { runInstallCommand } from '../../utils/run-command.ts'
 import { spinner } from '../../utils/spinner.ts'
-import { PrettierConfigManager } from './config.manager.ts'
+import { PrettierConfigManager } from './prettier-config-manager.ts'
 
 export const setupPrettier = async () => {
 	showText(' Prettier ', { bgColor: '#A04967' })

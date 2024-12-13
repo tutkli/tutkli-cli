@@ -6,7 +6,7 @@ import {
 } from '../../utils/messages.ts'
 import { runInstallCommand } from '../../utils/run-command.ts'
 import { spinner } from '../../utils/spinner.ts'
-import { CVAConfigManager } from './config.manager.ts'
+import { CVAConfigManager } from './cva-config-manager.ts'
 
 export const setupCVA = async () => {
 	showText(' CVA ', { bgColor: '#454545', color: '#AAAAAA' })

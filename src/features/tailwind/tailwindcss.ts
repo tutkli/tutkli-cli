@@ -6,8 +6,8 @@ import {
 } from '../../utils/messages.ts'
 import { runInstallCommand } from '../../utils/run-command.ts'
 import { spinner } from '../../utils/spinner.ts'
-import { TailwindConfigManager } from './config.manager.ts'
-import { TailwindStyleManager } from './style.manager.ts'
+import { TailwindConfigManager } from './tw-config-manager.ts'
+import { TailwindStyleManager } from './tw-style-manager.ts'
 
 export const setupTailwind = async (): Promise<void> => {
 	showText(' TailwindCSS ', { bgColor: '#2982AF', color: '#E2E8F0' })

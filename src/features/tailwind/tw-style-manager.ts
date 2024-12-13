@@ -1,4 +1,4 @@
-import type { FileContent } from '../../types/registry.types.ts'
+import type { FileContent } from '../../types/types.ts'
 import { askQuestion, askYesNoQuestion } from '../../utils/prompt.ts'
 
 export class TailwindStyleManager {
