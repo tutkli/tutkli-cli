@@ -21,6 +21,7 @@ async function ask() {
 		showBanner()
 		isBannerShown = true
 	}
+	console.log('')
 	let selectedFeature: Features = await select({
 		message: 'Which package would you like to install?',
 		choices: [
