@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 
 import { select } from '@inquirer/prompts'
-import { setupCVA } from './features/cva.ts'
-import { setupPrettier } from './features/prettier'
-import { setupTailwind } from './features/tailwindcss.ts'
+import { setupCVA } from './features/cva/cva.ts'
+import { setupPrettier } from './features/prettier/prettier.ts'
+import { setupTailwind } from './features/tailwind/tailwindcss.ts'
 import { showBanner } from './utils/messages.ts'
 
 const features = {
