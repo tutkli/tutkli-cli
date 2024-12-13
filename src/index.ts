@@ -14,8 +14,13 @@ const features = {
 
 type Features = keyof typeof features | 'exit'
 
+let isBannerShown = false
+
 async function ask() {
-	showBanner()
+	if (!isBannerShown) {
+		showBanner()
+		isBannerShown = true
+	}
 	let selectedFeature: Features = await select({
 		message: 'Which package would you like to install?',
 		choices: [
