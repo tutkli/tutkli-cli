@@ -6,7 +6,7 @@ import {
 } from '../utils/package-json.ts'
 import { askYesNoQuestion } from '../utils/prompt.ts'
 import { runInstallCommand } from '../utils/run-command'
-import { asyncSpinner, spinner } from '../utils/spinner.ts'
+import { spinner } from '../utils/spinner.ts'
 
 type PrettierPlugin = {
 	dependency: string
@@ -77,7 +77,7 @@ export const setupPrettier = async () => {
 
 	try {
 		// Install dependencies
-		await asyncSpinner({
+		await spinner({
 			loadingText: 'Installing dependencies...',
 			successText: 'Dependencies installed',
 			fn: () => runInstallCommand(getPrettierDeps(pluginRegistry), true),
@@ -104,7 +104,7 @@ export const setupPrettier = async () => {
 
 		if (runPrettify) {
 			// Run prettify script
-			await asyncSpinner({
+			await spinner({
 				loadingText: 'Running "prettify" script...',
 				successText: 'Ran Prettify script',
 				fn: () => runPackageJsonScript('prettify'),

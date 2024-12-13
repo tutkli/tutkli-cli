@@ -2,7 +2,7 @@ import { writeOrUpdateFile } from '../utils/file.ts'
 import { showErrorText, showSuccessText, showText } from '../utils/messages.ts'
 import { askQuestion } from '../utils/prompt.ts'
 import { runInstallCommand } from '../utils/run-command.ts'
-import { asyncSpinner, spinner } from '../utils/spinner.ts'
+import { spinner } from '../utils/spinner.ts'
 
 const cvaDeps = ['cva@beta', 'tailwind-merge']
 
@@ -26,7 +26,7 @@ export const setupCVA = async () => {
 
 	try {
 		// Install dependencies
-		await asyncSpinner({
+		await spinner({
 			loadingText: 'Installing dependencies...',
 			successText: 'Dependencies installed',
 			fn: () => runInstallCommand(cvaDeps, false),
