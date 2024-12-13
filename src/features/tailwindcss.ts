@@ -33,27 +33,18 @@ const tailwindMaterialFixes = `\n.mdc-notched-outline__notch {
 export const setupTailwind = async (): Promise<void> => {
 	showText(' TailwindCSS ', { bgColor: '#2982AF', color: '#E2E8F0' })
 
-	let shouldRunInit: boolean = true
 	let stylesPath: string = './src/styles.css'
 	let hasNgMaterial: boolean = false
 
-	// Prompt the user if they want to run tailwind init
-	shouldRunInit = await askYesNoQuestion(
-		'Would you like to run `tailwindcss init` to create a Tailwind configuration file?',
-		true
+	// Prompt the user for the styles.css path
+	stylesPath = await askQuestion(
+		'Please specify the path to your styles.css file:',
+		'./src/styles.css'
 	)
-
-	if (shouldRunInit) {
-		// Prompt the user for the styles.css path
-		stylesPath = await askQuestion(
-			'Please specify the path to your styles.css file:',
-			'./src/styles.css'
-		)
-		hasNgMaterial = await askYesNoQuestion(
-			'Are you using Tailwind alongside Angular Material 3?',
-			false
-		)
-	}
+	hasNgMaterial = await askYesNoQuestion(
+		'Are you using Tailwind alongside Angular Material 3?',
+		false
+	)
 
 	try {
 		// Install dependencies
@@ -63,22 +54,20 @@ export const setupTailwind = async (): Promise<void> => {
 			fn: () => runInstallCommand(tailwindDeps, true),
 		})
 
-		if (shouldRunInit) {
-			// Run tailwind init
-			await spinner({
-				loadingText: 'Initializing TailwindCSS...',
-				successText: 'TailwindCSS initialized',
-				fn: () => writeOrUpdateFile('tailwind.config.js', tailwindConfig, true),
-			})
+		// Create tailwind config file
+		await spinner({
+			loadingText: 'Initializing TailwindCSS...',
+			successText: 'TailwindCSS initialized',
+			fn: () => writeOrUpdateFile('tailwind.config.js', tailwindConfig, true),
+		})
 
-			// Add tailwind directives
-			const styleContent = `${tailwindDirectives}${hasNgMaterial ? tailwindMaterialFixes : ''}`
-			await spinner({
-				loadingText: 'Adding TailwindCSS directive...',
-				successText: 'TailwindCSS directives added',
-				fn: () => writeOrUpdateFile(stylesPath, styleContent),
-			})
-		}
+		// Add tailwind directives
+		const styleContent = `${tailwindDirectives}${hasNgMaterial ? tailwindMaterialFixes : ''}`
+		await spinner({
+			loadingText: 'Adding TailwindCSS directive...',
+			successText: 'TailwindCSS directives added',
+			fn: () => writeOrUpdateFile(stylesPath, styleContent),
+		})
 	} catch (error) {
 		showErrorText(
 			`Error while setting up TailwindCSS: ${error instanceof Error ? error.message : String(error)}`
