@@ -1,14 +1,22 @@
-import { exec } from 'node:child_process'
+import { spawn } from 'node:child_process'
 import { detectPackageManager } from './package-manager.ts'
 
 export function runCommand(command: string): Promise<void> {
 	return new Promise((resolve, reject) => {
-		exec(command, (error, stdout, stderr) => {
-			if (error) {
-				reject(error)
-				return
+		const process = spawn(command, { shell: true, stdio: 'ignore' })
+
+		process.on('error', error => {
+			reject(
+				new Error(`Command "${command}" failed with error: ${error.message}`)
+			)
+		})
+
+		process.on('close', code => {
+			if (code !== 0) {
+				reject(new Error(`Command "${command}" exited with code ${code}`))
+			} else {
+				resolve()
 			}
-			resolve()
 		})
 	})
 }
@@ -43,32 +51,4 @@ export async function runInstallCommand(
 	}
 
 	await runCommand(installCommand)
-}
-
-/**
- * Runs a CLI command after determining the correct prefix based on the package manager.
- *
- * @param baseCommand - The base command to execute (e.g., "tailwindcss init").
- * @returns A promise that resolves when the command completes.
- */
-export async function runCLICommand(baseCommand: string): Promise<void> {
-	const packageManager = detectPackageManager()
-
-	// Build the correct command prefix
-	let cliCommand: string
-	switch (packageManager) {
-		case 'npm':
-			cliCommand = `npx ${baseCommand}`
-			break
-		case 'yarn':
-			cliCommand = `yarn ${baseCommand}`
-			break
-		case 'bun':
-			cliCommand = `bunx ${baseCommand}`
-			break
-		default:
-			throw new Error(`Unsupported package manager: ${packageManager}`)
-	}
-
-	await runCommand(cliCommand)
 }

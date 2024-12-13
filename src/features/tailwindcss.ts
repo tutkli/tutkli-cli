@@ -2,7 +2,7 @@ import { writeOrUpdateFile } from '../utils/file.ts'
 import { showErrorText, showSuccessText, showText } from '../utils/messages.ts'
 import { askQuestion, askYesNoQuestion } from '../utils/prompt.ts'
 import { runInstallCommand } from '../utils/run-command.ts'
-import { spinner } from '../utils/spinner.ts'
+import { asyncSpinner, spinner } from '../utils/spinner.ts'
 
 const tailwindDeps = ['tailwindcss']
 
@@ -57,7 +57,7 @@ export const setupTailwind = async (): Promise<void> => {
 
 	try {
 		// Install dependencies
-		await spinner({
+		await asyncSpinner({
 			loadingText: 'Installing dependencies....',
 			successText: 'Dependencies installed',
 			fn: () => runInstallCommand(tailwindDeps, true),

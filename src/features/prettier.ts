@@ -6,32 +6,69 @@ import {
 } from '../utils/package-json.ts'
 import { askYesNoQuestion } from '../utils/prompt.ts'
 import { runInstallCommand } from '../utils/run-command'
-import { spinner } from '../utils/spinner.ts'
+import { asyncSpinner, spinner } from '../utils/spinner.ts'
 
-// Prettier and plugins to install
-const prettierDeps = [
-	'prettier',
-	'prettier-plugin-organize-imports',
-	'prettier-plugin-tailwindcss',
+type PrettierPlugin = {
+	dependency: string
+	promptMessage: string
+	isEnabled: boolean
+}
+
+const createPluginRegistry = (): PrettierPlugin[] => [
+	{
+		dependency: 'prettier-plugin-organize-imports',
+		promptMessage: '',
+		isEnabled: true,
+	},
+	{
+		dependency: 'prettier-plugin-tailwindcss',
+		promptMessage: 'Would you like to install the TailwindCSS plugin?',
+		isEnabled: false,
+	},
 ]
 
-// Prettier configuration content
-const prettierConfig = `{
-\t"useTabs": true,
-\t"singleQuote": true,
-\t"semi": false,
-\t"bracketSpacing": true,
-\t"arrowParens": "avoid",
-\t"trailingComma": "es5",
-\t"bracketSameLine": true,
-\t"htmlWhitespaceSensitivity": "ignore",
-\t"printWidth": 80,
-\t"endOfLine": "auto",
-\t"plugins": ["prettier-plugin-organize-imports", "prettier-plugin-tailwindcss"]
-}`
+const promptForPlugins = async (plugins: PrettierPlugin[]) => {
+	for (const plugin of plugins) {
+		if (plugin.promptMessage === '') continue
+		plugin.isEnabled = await askYesNoQuestion(
+			plugin.promptMessage,
+			plugin.isEnabled
+		)
+	}
+	return plugins
+}
+
+const getPrettierDeps = (plugins: PrettierPlugin[]) => {
+	const pluginDeps = plugins
+		.filter(plugin => plugin.isEnabled)
+		.map(plugin => plugin.dependency)
+	return ['prettier', ...pluginDeps]
+}
+
+const getPrettierConfig = (plugins: PrettierPlugin[]) => {
+	const config = {
+		useTabs: true,
+		singleQuote: true,
+		semi: false,
+		bracketSpacing: true,
+		arrowParens: 'avoid',
+		trailingComma: 'es5',
+		bracketSameLine: true,
+		htmlWhitespaceSensitivity: 'ignore',
+		printWidth: 80,
+		endOfLine: 'auto',
+		plugins: plugins
+			.filter(plugin => plugin.isEnabled)
+			.map(plugin => plugin.dependency),
+	}
+	return JSON.stringify(config, null, 2)
+}
 
 export const setupPrettier = async () => {
 	showText(' Prettier ', { bgColor: '#A04967' })
+
+	const pluginRegistry = createPluginRegistry()
+	await promptForPlugins(pluginRegistry)
 
 	const runPrettify = await askYesNoQuestion(
 		'Would you like to run the "prettify" script after installation?',
@@ -40,10 +77,10 @@ export const setupPrettier = async () => {
 
 	try {
 		// Install dependencies
-		await spinner({
+		await asyncSpinner({
 			loadingText: 'Installing dependencies...',
 			successText: 'Dependencies installed',
-			fn: () => runInstallCommand(prettierDeps, true),
+			fn: () => runInstallCommand(getPrettierDeps(pluginRegistry), true),
 		})
 
 		// Add prettify script
@@ -57,12 +94,17 @@ export const setupPrettier = async () => {
 		await spinner({
 			loadingText: 'Creating .prettierrc.json file....',
 			successText: '.prettierrc.json file created',
-			fn: () => writeOrUpdateFile('.prettierrc.json', prettierConfig, true),
+			fn: () =>
+				writeOrUpdateFile(
+					'.prettierrc.json',
+					getPrettierConfig(pluginRegistry),
+					true
+				),
 		})
 
 		if (runPrettify) {
 			// Run prettify script
-			await spinner({
+			await asyncSpinner({
 				loadingText: 'Running "prettify" script...',
 				successText: 'Ran Prettify script',
 				fn: () => runPackageJsonScript('prettify'),

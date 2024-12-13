@@ -10,7 +10,7 @@
 	"description": "Tutkli personal CLI to set up environments with different packages",
 	"license": "MIT",
 	"scripts": {
-		"dev": "node dist/index.js",
+		"dev": "bun dist/index.js",
 		"prepublishOnly": "bun run build",
 		"build": "bun bun.build.js",
 		"build:watch": "bun build ./src/index.ts --outdir ./dist --target node --watch",
@@ -28,7 +28,6 @@
 		"@types/node": "^22.10.2",
 		"prettier": "^3.4.2",
 		"prettier-plugin-organize-imports": "^4.1.0",
-		"prettier-plugin-tailwindcss": "^0.6.9",
 		"typescript": "^5.7.2"
 	},
 	"peerDependencies": {
