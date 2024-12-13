@@ -19,6 +19,9 @@ export const setupTailwind = async (): Promise<void> => {
 	await configManager.promptPlugins()
 	const stylesPath = await styleManager.promptStylesPath()
 	await styleManager.promptExtraStyles()
+	const proceed = await configManager.promptProceedInstallation()
+
+	if (!proceed) return
 
 	try {
 		// Install dependencies

@@ -15,6 +15,9 @@ export const setupCVA = async () => {
 
 	// Prompts
 	const utilPath = await configManager.promptUtilPath()
+	const proceed = await configManager.promptProceedInstallation()
+
+	if (!proceed) return
 
 	try {
 		// Install dependencies

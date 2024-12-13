@@ -1,4 +1,5 @@
 import { confirm, input } from '@inquirer/prompts'
+import { showDeps } from './messages.ts'
 
 /**
  * Prompts the user with a yes/no question in the terminal.
@@ -26,4 +27,15 @@ export async function askQuestion(
 	defaultAnswer: string
 ): Promise<string> {
 	return input({ message, default: defaultAnswer })
+}
+
+/**
+ * Prompts the user to proceed with installation after displaying a set of dependencies.
+ *
+ * @param deps - An array of dependencies that will be shown to the user.
+ * @returns A promise that resolves to `true` if the user agrees to proceed, or `false` otherwise.
+ */
+export async function askProceedInstallation(deps: string[]) {
+	await showDeps(deps)
+	return askYesNoQuestion('Proceed with installation?', true)
 }

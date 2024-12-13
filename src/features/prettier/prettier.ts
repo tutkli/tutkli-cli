@@ -20,6 +20,9 @@ export const setupPrettier = async () => {
 	// Prompts
 	await configManager.promptPlugins()
 	const runPrettify = await configManager.promptRunPrettify()
+	const proceed = await configManager.promptProceedInstallation()
+
+	if (!proceed) return
 
 	try {
 		// Install dependencies

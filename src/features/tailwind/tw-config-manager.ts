@@ -1,5 +1,5 @@
 import type { DepPlugin } from '../../types/types.ts'
-import { askYesNoQuestion } from '../../utils/prompt.ts'
+import { askProceedInstallation, askYesNoQuestion } from '../../utils/prompt.ts'
 
 export class TailwindConfigManager {
 	private plugins: DepPlugin[] = []
@@ -12,6 +12,10 @@ export class TailwindConfigManager {
 				plugin.isEnabled
 			)
 		}
+	}
+
+	public async promptProceedInstallation() {
+		return askProceedInstallation(this.getDeps())
 	}
 
 	public getDeps() {

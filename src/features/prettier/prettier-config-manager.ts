@@ -1,5 +1,5 @@
 import type { DepPlugin } from '../../types/types.ts'
-import { askYesNoQuestion } from '../../utils/prompt.ts'
+import { askProceedInstallation, askYesNoQuestion } from '../../utils/prompt.ts'
 
 export class PrettierConfigManager {
 	private plugins: DepPlugin[] = [
@@ -30,6 +30,10 @@ export class PrettierConfigManager {
 			'Would you like to run the "prettify" script after installation?',
 			true
 		)
+	}
+
+	public async promptProceedInstallation() {
+		return askProceedInstallation(this.getDeps())
 	}
 
 	public getDeps() {

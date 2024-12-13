@@ -1,4 +1,4 @@
-import { askQuestion } from '../../utils/prompt.ts'
+import { askProceedInstallation, askQuestion } from '../../utils/prompt.ts'
 
 export class CVAConfigManager {
 	public promptUtilPath() {
@@ -6,6 +6,10 @@ export class CVAConfigManager {
 			'Where would you like to add the cva util file?',
 			'./src/utils/cva.ts'
 		)
+	}
+
+	public async promptProceedInstallation() {
+		return askProceedInstallation(this.getDeps())
 	}
 
 	public getDeps() {
