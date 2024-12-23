@@ -1,6 +1,12 @@
-# tutkli-config
+# tutkli-cli
 
 CLI for my personal project configs.
+
+To use:
+
+```bash
+npx tutkli-cli
+```
 
 To install dependencies:
 
