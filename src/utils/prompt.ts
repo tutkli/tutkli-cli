@@ -24,7 +24,7 @@ export async function askYesNoQuestion(
  */
 export async function askQuestion(
 	message: string,
-	defaultAnswer: string
+	defaultAnswer?: string
 ): Promise<string> {
 	return input({ message, default: defaultAnswer })
 }

@@ -1,12 +1,14 @@
 #!/usr/bin/env node
 
 import { select } from '@inquirer/prompts'
+import { angularNew } from './features/angular/angular.ts'
 import { setupCVA } from './features/cva/cva.ts'
 import { setupPrettier } from './features/prettier/prettier.ts'
 import { setupTailwind } from './features/tailwind/tailwindcss.ts'
 import { showBanner } from './utils/messages.ts'
 
 const features = {
+	angular: angularNew,
 	prettier: setupPrettier,
 	tailwind: setupTailwind,
 	cva: setupCVA,
@@ -25,6 +27,7 @@ async function ask() {
 	let selectedFeature: Features = await select({
 		message: 'Which package would you like to install?',
 		choices: [
+			{ name: 'Create Angular', value: 'angular' },
 			{ name: 'Prettier', value: 'prettier' },
 			{ name: 'TailwindCSS', value: 'tailwind' },
 			{ name: 'CVA', value: 'cva' },

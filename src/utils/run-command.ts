@@ -1,9 +1,15 @@
 import { spawn } from 'node:child_process'
 import { detectPackageManager } from './package-manager.ts'
 
-export function runCommand(command: string): Promise<void> {
+export function runCommand(
+	command: string,
+	showStdio?: boolean
+): Promise<void> {
 	return new Promise((resolve, reject) => {
-		const process = spawn(command, { shell: true, stdio: 'ignore' })
+		const process = spawn(command, {
+			shell: true,
+			stdio: showStdio ? 'inherit' : 'ignore',
+		})
 
 		process.on('error', error => {
 			reject(

@@ -35,3 +35,8 @@ export async function showDeps(deps: string[]) {
 		console.log(chalk.blue.bold(dep))
 	}
 }
+
+export async function showCommand(command: string) {
+	console.log('The following command will be run:')
+	console.log(chalk.blue.bold(command))
+}
