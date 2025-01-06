@@ -1,6 +1,6 @@
 import fs from 'fs'
 import path from 'path'
-import { detectPackageManager } from './package-manager.ts'
+import { detectPackageManager, packageManagerRun } from './package-manager.ts'
 import { runCommand } from './run-command.ts'
 
 /**
@@ -55,20 +55,7 @@ export function addPackageJsonScript(
 export async function runPackageJsonScript(scriptName: string): Promise<void> {
 	const packageManager = detectPackageManager()
 
-	let command: string
-	switch (packageManager) {
-		case 'npm':
-			command = `npm run ${scriptName}`
-			break
-		case 'yarn':
-			command = `yarn ${scriptName}`
-			break
-		case 'bun':
-			command = `bun ${scriptName}`
-			break
-		default:
-			throw new Error(`Unsupported package manager: ${packageManager}`)
-	}
+	const command = `${packageManagerRun[packageManager]} ${scriptName}`
 
 	try {
 		await runCommand(command)

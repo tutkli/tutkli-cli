@@ -1,5 +1,9 @@
 import { spawn } from 'node:child_process'
-import { detectPackageManager } from './package-manager.ts'
+import {
+	detectPackageManager,
+	devFlag,
+	packageManagerInstall,
+} from './package-manager.ts'
 
 export function runCommand(
 	command: string,
@@ -39,22 +43,8 @@ export async function runInstallCommand(
 	dev: boolean = true
 ): Promise<void> {
 	const packageManager = detectPackageManager()
-	const devFlag = dev ? '-D' : ''
 
-	let installCommand: string
-	switch (packageManager) {
-		case 'npm':
-			installCommand = `npm install ${devFlag} ${dependencies.join(' ')}`
-			break
-		case 'yarn':
-			installCommand = `yarn add ${devFlag} ${dependencies.join(' ')}`
-			break
-		case 'bun':
-			installCommand = `bun add ${devFlag} ${dependencies.join(' ')}`
-			break
-		default:
-			throw new Error(`Unsupported package manager: ${packageManager}`)
-	}
+	const installCommand = `${packageManagerInstall[packageManager]} ${devFlag(dev)} ${dependencies.join(' ')}`
 
 	await runCommand(installCommand)
 }
