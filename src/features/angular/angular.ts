@@ -12,7 +12,7 @@ import { NgManager } from './ng-manager.ts'
  * configurations.
  */
 export const angularNew = async () => {
-	showText(' Angular New ')
+	showText(' Angular New ', { bgColor: '#F50D53' })
 
 	const ngManager = new NgManager()
 
@@ -22,7 +22,6 @@ export const angularNew = async () => {
 
 		if (!proceed) return
 
-		// Run ng new
 		try {
 			await runCommand(ngManager.ngNewCommand, true)
 		} catch (error) {

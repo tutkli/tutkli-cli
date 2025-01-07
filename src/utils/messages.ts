@@ -6,7 +6,9 @@ export function showText(
 	colors?: { bgColor?: string; color?: string }
 ) {
 	console.log(
-		chalk.bgHex(colors?.bgColor ?? '#000').hex(colors?.color ?? '#fff')(text)
+		chalk.bold.bgHex(colors?.bgColor ?? '#000').hex(colors?.color ?? '#fff')(
+			text
+		)
 	)
 }
 
