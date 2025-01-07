@@ -10,7 +10,7 @@
 	"description": "Tutkli personal CLI to set up environments with different packages",
 	"license": "MIT",
 	"scripts": {
-		"dev": "bun dist/index.js",
+		"dev": "bun src/index.ts",
 		"prepublishOnly": "bun run build",
 		"build": "bun bun.build.js",
 		"build:watch": "bun build ./src/index.ts --outdir ./dist --target node --watch",
