@@ -2,24 +2,29 @@ import { showErrorText, showText } from '../../utils/messages.ts'
 import { runCommand } from '../../utils/run-command.ts'
 import { NgManager } from './ng-manager.ts'
 
+/**
+ * Asynchronously initializes the creation of a new Angular project.
+ *
+ * This function prompts the user for various configuration options needed
+ * for creating a new Angular project, including project name, style type,
+ * and dependency bundling preference. If the user consents to proceed,
+ * it executes the Angular CLI `ng new` command using the specified
+ * configurations.
+ */
 export const angularNew = async () => {
 	showText(' Angular New ')
 
 	const ngManager = new NgManager()
 
 	try {
-		// Prompts
-		await ngManager.promptProjectName()
-		await ngManager.promptStyleType()
-		await ngManager.promptBun()
-
+		await ngManager.prompt()
 		const proceed = await ngManager.promptProceed()
 
 		if (!proceed) return
 
 		// Run ng new
 		try {
-			await runCommand(ngManager.getNgNewCommand(), true)
+			await runCommand(ngManager.ngNewCommand, true)
 		} catch (error) {
 			showErrorText(`Error while running ng new`)
 		}

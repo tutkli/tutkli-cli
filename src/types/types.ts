@@ -9,3 +9,8 @@ export type FileContent = {
 	isEnabled: boolean
 	content: string
 }
+
+export interface CLIManager {
+	prompt: () => Promise<void>
+	promptProceed: () => Promise<boolean>
+}
