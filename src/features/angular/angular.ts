@@ -18,7 +18,7 @@ export const angularNew = async () => {
 
 	// Run ng new
 	try {
-		await runCommand(ngManager.getNgCommand(), true)
+		await runCommand(ngManager.getNgNewCommand(), true)
 	} catch (error) {
 		showErrorText(`Error while running ng new`)
 	}
