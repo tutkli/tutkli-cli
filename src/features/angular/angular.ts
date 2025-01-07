@@ -7,19 +7,25 @@ export const angularNew = async () => {
 
 	const ngManager = new NgManager()
 
-	// Prompts
-	await ngManager.promptProjectName()
-	await ngManager.promptStyleType()
-	await ngManager.promptBun()
-
-	const proceed = await ngManager.promptProceed()
-
-	if (!proceed) return
-
-	// Run ng new
 	try {
-		await runCommand(ngManager.getNgNewCommand(), true)
+		// Prompts
+		await ngManager.promptProjectName()
+		await ngManager.promptStyleType()
+		await ngManager.promptBun()
+
+		const proceed = await ngManager.promptProceed()
+
+		if (!proceed) return
+
+		// Run ng new
+		try {
+			await runCommand(ngManager.getNgNewCommand(), true)
+		} catch (error) {
+			showErrorText(`Error while running ng new`)
+		}
 	} catch (error) {
-		showErrorText(`Error while running ng new`)
+		showErrorText(
+			`Error while generating ng new command: ${error instanceof Error ? error.message : String(error)}`
+		)
 	}
 }
