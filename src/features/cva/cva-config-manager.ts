@@ -1,6 +1,7 @@
+import { text } from '@clack/prompts'
 import type { CLIManager } from '../../types/types.ts'
 import { writeOrUpdateFile } from '../../utils/file.ts'
-import { askProceedInstallation, askQuestion } from '../../utils/prompt.ts'
+import { askProceedInstallation } from '../../utils/prompt.ts'
 import { runInstallCommand } from '../../utils/run-command.ts'
 import { spinner } from '../../utils/spinner.ts'
 
@@ -14,13 +15,13 @@ export const { cva, cx, compose } = defineConfig({
 });`
 
 export class CVAConfigManager implements CLIManager {
-	private utilPath: string = ''
+	private utilPath: string | symbol = ''
 
 	public async prompt(): Promise<void> {
 		this.utilPath = await this.promptUtilPath()
 	}
 
-	public promptProceed(): Promise<boolean> {
+	public promptProceed(): Promise<boolean | symbol> {
 		return this.promptProceedInstallation()
 	}
 
@@ -36,15 +37,15 @@ export class CVAConfigManager implements CLIManager {
 		await spinner({
 			loadingText: 'Creating CVA util file...',
 			successText: 'CVA util file created',
-			fn: () => writeOrUpdateFile(this.utilPath, CVA_UTIL_CONTENT),
+			fn: () => writeOrUpdateFile(this.utilPath as string, CVA_UTIL_CONTENT),
 		})
 	}
 
 	private promptUtilPath() {
-		return askQuestion(
-			'Where would you like to add the cva util file?',
-			'./src/utils/cva.ts'
-		)
+		return text({
+			message: 'Where would you like to add the cva util file?',
+			defaultValue: './src/utils/cva.ts',
+		})
 	}
 
 	private async promptProceedInstallation() {

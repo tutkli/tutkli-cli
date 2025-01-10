@@ -28,7 +28,7 @@ export class PrettierConfigManager implements CLIManager {
 		this.runPrettify = await this.promptRunPrettify()
 	}
 
-	public promptProceed(): Promise<boolean> {
+	public promptProceed(): Promise<boolean | symbol> {
 		return this.promptProceedInstallation()
 	}
 

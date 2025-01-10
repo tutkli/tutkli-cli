@@ -1,4 +1,5 @@
 import chalk from 'chalk'
+import dedent from 'dedent'
 import { getDepsWithVersions } from './npm.ts'
 
 export function showText(
@@ -31,10 +32,13 @@ export function showBanner() {
 }
 
 export async function showDeps(deps: string[]) {
-	console.log('The following dependencies will be installed:')
+	console.log(dedent`${chalk.gray('│')}
+					   ${chalk.gray('│')}  The following dependencies will be installed:
+					   `)
+
 	const versionedDeps = await getDepsWithVersions(deps)
 	for (const dep of versionedDeps) {
-		console.log(chalk.blue.bold(dep))
+		console.log(`${chalk.gray(`│  - `)}${chalk.blue.bold(dep)}`)
 	}
 }
 

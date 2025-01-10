@@ -1,28 +1,60 @@
-import {
-	showErrorText,
-	showSuccessText,
-	showText,
-} from '../../utils/messages.ts'
-import { CVAConfigManager } from './cva-config-manager.ts'
+import { cancel, confirm, group, intro, outro, text } from '@clack/prompts'
+import chalk from 'chalk'
+import { writeOrUpdateFile } from '../../utils/file.ts'
+import { showDeps } from '../../utils/messages.ts'
+import { runInstallCommand } from '../../utils/run-command.ts'
+import { clackSpinner } from '../../utils/spinner.ts'
+
+const CVA_UTIL_CONTENT = `import { defineConfig } from "cva";
+import { twMerge } from "tailwind-merge";
+
+export const { cva, cx, compose } = defineConfig({
+  hooks: {
+	onComplete: (className) => twMerge(className),
+  },
+});`
+
+const deps = ['cva@beta', 'tailwind-merge']
 
 export const setupCVA = async () => {
-	showText(' CVA ', { bgColor: '#454545', color: '#AAAAAA' })
+	intro(chalk.bgHex('#454545').hex('#AAAAAA')`Initializing CVA setup...`)
 
-	const configManager = new CVAConfigManager()
+	const config = await group(
+		{
+			path: () =>
+				text({
+					message: 'Where would you like to add the cva util file?',
+					placeholder: './src/utils/cva.ts',
+					defaultValue: './src/utils/cva.ts',
+				}),
+			install: async () => {
+				await showDeps(deps)
+				return confirm({
+					message: 'Proceed with the installation?',
+					initialValue: true,
+				})
+			},
+		},
+		{
+			onCancel: () => {
+				cancel('CLI operation cancelled')
+				process.exit(0)
+			},
+		}
+	)
 
-	try {
-		await configManager.prompt()
-		const proceed = await configManager.promptProceed()
+	if (!config.install) return
 
-		if (!proceed) return
+	await clackSpinner({
+		startText: 'Installing dependencies...',
+		stopText: 'Dependencies installed',
+		fn: () => runInstallCommand(deps, true),
+	})
+	await clackSpinner({
+		startText: 'Creating CVA util file...',
+		stopText: 'CVA util file created',
+		fn: () => writeOrUpdateFile(config.path as string, CVA_UTIL_CONTENT),
+	})
 
-		await configManager.run()
-	} catch (error) {
-		showErrorText(
-			`Error while setting up CVA: ${error instanceof Error ? error.message : String(error)}`
-		)
-		return
-	}
-
-	showSuccessText('CVA installed successfully!')
+	outro(chalk.bgHex('#13A10E')`CVA installed successfully!`)
 }

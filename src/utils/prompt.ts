@@ -1,3 +1,4 @@
+import { confirm as clackConfirm } from '@clack/prompts'
 import { confirm, input } from '@inquirer/prompts'
 import { showDeps } from './messages.ts'
 
@@ -37,5 +38,8 @@ export async function askQuestion(
  */
 export async function askProceedInstallation(deps: string[]) {
 	await showDeps(deps)
-	return askYesNoQuestion('Proceed with installation?', true)
+	return clackConfirm({
+		message: 'Proceed with installation?',
+		initialValue: true,
+	})
 }
