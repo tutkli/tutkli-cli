@@ -41,7 +41,7 @@ async function ask() {
 	)
 }
 
-try {
+async function main() {
 	let command = await ask()
 	while (!isCancel(command)) {
 		await commands[command as Command]()
@@ -49,10 +49,6 @@ try {
 	}
 	note(`Bye!        `)
 	process.exit(0)
-} catch (error) {
-	if (error instanceof Error && error.name === 'ExitPromptError') {
-		// noop; silence this error
-	} else {
-		throw error
-	}
 }
+
+main().catch(console.error)
