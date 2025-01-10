@@ -17,7 +17,7 @@ export const { cva, cx, compose } = defineConfig({
 const deps = ['cva@beta', 'tailwind-merge']
 
 export const setupCVA = async () => {
-	intro(chalk.bgHex('#454545').hex('#AAAAAA')`Initializing CVA setup...`)
+	intro(chalk.bold.bgHex('#454545').hex('#AAAAAA')`Initializing CVA...`)
 
 	const config = await group(
 		{
