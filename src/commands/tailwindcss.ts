@@ -1,4 +1,4 @@
-import { cancel, confirm, group, intro, outro, text } from '@clack/prompts'
+import { confirm, group, intro, note, outro, text } from '@clack/prompts'
 import chalk from 'chalk'
 import { writeOrUpdateFile } from '../utils/file.ts'
 import { showDeps } from '../utils/prompt.ts'
@@ -67,7 +67,7 @@ export const setupTailwind = async (): Promise<void> => {
 		},
 		{
 			onCancel: () => {
-				cancel('CLI operation cancelled')
+				note(`Bye!        `)
 				process.exit(0)
 			},
 		}

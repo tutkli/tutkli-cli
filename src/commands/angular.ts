@@ -1,12 +1,4 @@
-import {
-	cancel,
-	confirm,
-	group,
-	intro,
-	note,
-	select,
-	text,
-} from '@clack/prompts'
+import { confirm, group, intro, note, select, text } from '@clack/prompts'
 import chalk from 'chalk'
 import {
 	detectPackageManager,
@@ -75,7 +67,7 @@ export const setupAngular = async () => {
 		},
 		{
 			onCancel: () => {
-				cancel('CLI operation cancelled')
+				note(`Bye!        `)
 				process.exit(0)
 			},
 		}

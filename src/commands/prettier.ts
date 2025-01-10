@@ -1,11 +1,4 @@
-import {
-	cancel,
-	confirm,
-	group,
-	intro,
-	multiselect,
-	outro,
-} from '@clack/prompts'
+import { confirm, group, intro, multiselect, note, outro } from '@clack/prompts'
 import chalk from 'chalk'
 import { writeOrUpdateFile } from '../utils/file.ts'
 import {
@@ -69,7 +62,7 @@ export const setupPrettier = async () => {
 		},
 		{
 			onCancel: () => {
-				cancel('CLI operation cancelled')
+				note(`Bye!        `)
 				process.exit(0)
 			},
 		}

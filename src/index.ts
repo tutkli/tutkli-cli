@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import { isCancel, select } from '@clack/prompts'
+import { isCancel, note, select } from '@clack/prompts'
 import { setupAngular } from './commands/angular.ts'
 import { setupCVA } from './commands/cva.ts'
 import { setupPrettier } from './commands/prettier.ts'
@@ -47,6 +47,7 @@ try {
 		await commands[command as Command]()
 		command = await ask()
 	}
+	note(`Bye!        `)
 	process.exit(0)
 } catch (error) {
 	if (error instanceof Error && error.name === 'ExitPromptError') {
