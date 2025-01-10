@@ -42,7 +42,9 @@ const twContent = (styles: { [key in keyof typeof extraStyles]: boolean }) => {
 }
 
 export const setupTailwind = async (): Promise<void> => {
-	intro(chalk.bold.bgHex('#2982AF').hex('#E2E8F0')`Initializing TailwindCSS...`)
+	intro(
+		chalk.bold.bgHex('#2982AF').hex('#E2E8F0')`  Initializing TailwindCSS...  `
+	)
 
 	const config = await group(
 		{

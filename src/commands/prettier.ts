@@ -28,7 +28,7 @@ const prettierrc = (plugins: string[]) => {
 }
 
 export const setupPrettier = async () => {
-	intro(chalk.bold.bgHex('#A04967')`Initializing Prettier...`)
+	intro(chalk.bold.bgHex('#A04967')`  Initializing Prettier...  `)
 
 	const config = await group(
 		{

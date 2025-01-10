@@ -22,7 +22,7 @@ const ngNewCommand = (options: { name: string; style: string; bun: boolean }) =>
  * configurations.
  */
 export const setupAngular = async () => {
-	intro(chalk.bold.bgRed`Initializing Angular...`)
+	intro(chalk.bold.bgRed`  Initializing Angular...  `)
 
 	const prompts = await group(
 		{
