@@ -8,12 +8,12 @@ import {
 	text,
 } from '@clack/prompts'
 import chalk from 'chalk'
-import { showCommand } from '../../utils/messages.ts'
 import {
 	detectPackageManager,
 	packageManagerRun,
-} from '../../utils/package-manager.ts'
-import { runCommand } from '../../utils/run-command.ts'
+} from '../utils/package-manager.ts'
+import { showCommand } from '../utils/prompt.ts'
+import { runCommand } from '../utils/run-command.ts'
 
 const ngNewCommand = (options: { name: string; style: string; bun: boolean }) =>
 	`ng new ${options.name} --minimal --ssr false --style ${options.style} ${

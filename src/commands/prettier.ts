@@ -7,14 +7,14 @@ import {
 	outro,
 } from '@clack/prompts'
 import chalk from 'chalk'
-import { writeOrUpdateFile } from '../../utils/file.ts'
-import { showDeps } from '../../utils/messages.ts'
+import { writeOrUpdateFile } from '../utils/file.ts'
 import {
 	addPackageJsonScript,
 	runPackageJsonScript,
-} from '../../utils/package-json.ts'
-import { runInstallCommand } from '../../utils/run-command.ts'
-import { clackSpinner } from '../../utils/spinner.ts'
+} from '../utils/package-json.ts'
+import { showDeps } from '../utils/prompt.ts'
+import { runInstallCommand } from '../utils/run-command.ts'
+import { loadingSpinner } from '../utils/spinner.ts'
 
 const deps = (plugins: string[]) => ['prettier', ...plugins]
 const prettierrc = (plugins: string[]) => {
@@ -77,19 +77,19 @@ export const setupPrettier = async () => {
 
 	if (!config.install) return
 
-	await clackSpinner({
+	await loadingSpinner({
 		startText: 'Installing dependencies....',
 		stopText: 'Dependencies installed',
 		fn: () => runInstallCommand(deps(config.plugins ?? []), true),
 	})
 
-	await clackSpinner({
+	await loadingSpinner({
 		startText: `Adding "prettify" script...`,
 		stopText: `Prettify script added`,
 		fn: () => addPackageJsonScript('prettify', 'prettier --write .'),
 	})
 
-	await clackSpinner({
+	await loadingSpinner({
 		startText: `Creating ${chalk.italic(`.prettierrc.json`)} file....`,
 		stopText: `${chalk.italic(`.prettierrc.json`)} file created`,
 		fn: () =>
@@ -97,7 +97,7 @@ export const setupPrettier = async () => {
 	})
 
 	if (config.prettify) {
-		await clackSpinner({
+		await loadingSpinner({
 			startText: `Running "prettify" script...`,
 			stopText: `Ran Prettify script`,
 			fn: () => runPackageJsonScript('prettify'),

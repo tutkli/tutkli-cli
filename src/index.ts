@@ -1,19 +1,19 @@
 #!/usr/bin/env node
 
 import { isCancel, select } from '@clack/prompts'
-import { setupAngular } from './features/angular/angular.ts'
-import { setupCVA } from './features/cva/cva.ts'
-import { setupPrettier } from './features/prettier/prettier.ts'
-import { setupTailwind } from './features/tailwind/tailwindcss.ts'
+import { setupAngular } from './commands/angular.ts'
+import { setupCVA } from './commands/cva.ts'
+import { setupPrettier } from './commands/prettier.ts'
+import { setupTailwind } from './commands/tailwindcss.ts'
 
-const features = {
+const commands = {
 	angular: setupAngular,
 	prettier: setupPrettier,
 	tailwind: setupTailwind,
 	cva: setupCVA,
 }
 
-type Feature = keyof typeof features
+type Command = keyof typeof commands
 
 if (!process.argv[2]) {
 	console.log(`
@@ -44,7 +44,7 @@ async function ask() {
 try {
 	let command = await ask()
 	while (!isCancel(command)) {
-		await features[command as Feature]()
+		await commands[command as Command]()
 		command = await ask()
 	}
 	process.exit(0)

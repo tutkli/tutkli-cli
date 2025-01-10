@@ -1,9 +1,9 @@
 import { cancel, confirm, group, intro, outro, text } from '@clack/prompts'
 import chalk from 'chalk'
-import { writeOrUpdateFile } from '../../utils/file.ts'
-import { showDeps } from '../../utils/messages.ts'
-import { runInstallCommand } from '../../utils/run-command.ts'
-import { clackSpinner } from '../../utils/spinner.ts'
+import { writeOrUpdateFile } from '../utils/file.ts'
+import { showDeps } from '../utils/prompt.ts'
+import { runInstallCommand } from '../utils/run-command.ts'
+import { loadingSpinner } from '../utils/spinner.ts'
 
 const CVA_UTIL_CONTENT = `import { defineConfig } from "cva";
 import { twMerge } from "tailwind-merge";
@@ -45,12 +45,12 @@ export const setupCVA = async () => {
 
 	if (!config.install) return
 
-	await clackSpinner({
+	await loadingSpinner({
 		startText: 'Installing dependencies...',
 		stopText: 'Dependencies installed',
 		fn: () => runInstallCommand(deps, true),
 	})
-	await clackSpinner({
+	await loadingSpinner({
 		startText: 'Creating CVA util file...',
 		stopText: 'CVA util file created',
 		fn: () => writeOrUpdateFile(config.path as string, CVA_UTIL_CONTENT),
