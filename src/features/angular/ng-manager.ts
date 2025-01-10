@@ -1,6 +1,7 @@
 import type { CLIManager } from '../../types/types.ts'
 import { showCommand } from '../../utils/messages.ts'
 import { askQuestion, askYesNoQuestion } from '../../utils/prompt.ts'
+import { runCommand } from '../../utils/run-command.ts'
 
 const VALID_STYLE_TYPES = ['css', 'scss', 'less'] as const
 type StyleType = (typeof VALID_STYLE_TYPES)[number]
@@ -20,6 +21,10 @@ export class NgManager implements CLIManager {
 		this.projectName = await this.promptProjectName()
 		this.style = await this.promptStyleType()
 		this.useBun = await this.promptUseBun()
+	}
+
+	public async run(): Promise<void> {
+		await runCommand(this.ngNewCommand, true)
 	}
 
 	/**

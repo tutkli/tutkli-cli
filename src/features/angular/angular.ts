@@ -1,5 +1,4 @@
 import { showErrorText, showText } from '../../utils/messages.ts'
-import { runCommand } from '../../utils/run-command.ts'
 import { NgManager } from './ng-manager.ts'
 
 /**
@@ -22,11 +21,7 @@ export const angularNew = async () => {
 
 		if (!proceed) return
 
-		try {
-			await runCommand(ngManager.ngNewCommand, true)
-		} catch (error) {
-			showErrorText(`Error while running ng new`)
-		}
+		await ngManager.run()
 	} catch (error) {
 		showErrorText(
 			`Error while generating ng new command: ${error instanceof Error ? error.message : String(error)}`

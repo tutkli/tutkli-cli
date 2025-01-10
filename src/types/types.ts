@@ -12,5 +12,6 @@ export type FileContent = {
 
 export interface CLIManager {
 	prompt: () => Promise<void>
-	promptProceed: () => Promise<boolean>
+	promptProceed?: () => Promise<boolean>
+	run: () => Promise<void>
 }
