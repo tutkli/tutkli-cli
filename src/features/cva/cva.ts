@@ -10,13 +10,12 @@ export const setupCVA = async () => {
 
 	const configManager = new CVAConfigManager()
 
-	// Prompts
-	await configManager.prompt()
-	const proceed = await configManager.promptProceed()
-
-	if (!proceed) return
-
 	try {
+		await configManager.prompt()
+		const proceed = await configManager.promptProceed()
+
+		if (!proceed) return
+
 		await configManager.run()
 	} catch (error) {
 		showErrorText(

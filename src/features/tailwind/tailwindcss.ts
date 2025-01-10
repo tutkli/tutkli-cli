@@ -14,12 +14,11 @@ export const setupTailwind = async (): Promise<void> => {
 
 	try {
 		await configManager.prompt()
-		const stylesPath = await styleManager.prompt()
+		await styleManager.prompt()
 		const proceed = await configManager.promptProceed()
 
 		if (!proceed) return
 
-		// Install dependencies
 		await configManager.run()
 		await styleManager.run()
 	} catch (error) {
