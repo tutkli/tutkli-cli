@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 
 import { isCancel, select } from '@clack/prompts'
-import chalk from 'chalk'
 import { angularNew } from './features/angular/angular.ts'
 import { setupCVA } from './features/cva/cva.ts'
 import { setupPrettier } from './features/prettier/prettier.ts'
@@ -17,7 +16,7 @@ const features = {
 type Feature = keyof typeof features
 
 if (!process.argv[2]) {
-	console.log(chalk.blue`
+	console.log(`
 ████████╗██╗   ██╗████████╗██╗  ██╗██╗     ██╗     ██████╗██╗     ██╗
 ╚══██╔══╝██║   ██║╚══██╔══╝██║ ██╔╝██║     ██║    ██╔════╝██║     ██║
    ██║   ██║   ██║   ██║   █████╔╝ ██║     ██║    ██║     ██║     ██║
