@@ -1,30 +1,100 @@
-import { showErrorText, showText } from '../../utils/messages.ts'
-import { NgManager } from './ng-manager.ts'
+import {
+	cancel,
+	confirm,
+	group,
+	intro,
+	note,
+	select,
+	text,
+} from '@clack/prompts'
+import chalk from 'chalk'
+import { showCommand } from '../../utils/messages.ts'
+import {
+	detectPackageManager,
+	packageManagerRun,
+} from '../../utils/package-manager.ts'
+import { runCommand } from '../../utils/run-command.ts'
+
+const ngNewCommand = (options: { name: string; style: string; bun: boolean }) =>
+	`ng new ${options.name} --minimal --ssr false --style ${options.style} ${
+		options.bun ? '--package-manager bun' : ''
+	} --experimental-zoneless`
 
 /**
  * Asynchronously initializes the creation of a new Angular project.
  *
  * This function prompts the user for various configuration options needed
  * for creating a new Angular project, including project name, style type,
- * and dependency bundling preference. If the user consents to proceed,
+ * and package manager of preference. If the user consents to proceed,
  * it executes the Angular CLI `ng new` command using the specified
  * configurations.
  */
-export const angularNew = async () => {
-	showText(' Angular New ', { bgColor: '#F50D53' })
+export const setupAngular = async () => {
+	intro(chalk.bold.bgRed`Initializing Angular...`)
 
-	const ngManager = new NgManager()
+	const prompts = await group(
+		{
+			name: () =>
+				text({
+					message: 'What is the name of your project?',
+					placeholder: 'my-project',
+				}),
+			style: () =>
+				select({
+					message: 'Which stylesheet format would you like to use?',
+					options: [
+						{ value: 'css', label: 'CSS' },
+						{ value: 'scss', label: 'SCSS' },
+					],
+					initialValue: 'css',
+				}),
+			bun: () =>
+				confirm({
+					message: 'Would you like to use bun as package manager?',
+					initialValue: true,
+				}),
+			install: async ({ results }) => {
+				if (
+					results.name === undefined ||
+					results.style === undefined ||
+					results.bun === undefined
+				)
+					return false
+				await showCommand(
+					ngNewCommand({
+						name: results.name,
+						style: results.style,
+						bun: results.bun,
+					})
+				)
+				return confirm({
+					message: 'Proceed with the installation?',
+					initialValue: true,
+				})
+			},
+		},
+		{
+			onCancel: () => {
+				cancel('CLI operation cancelled')
+				process.exit(0)
+			},
+		}
+	)
 
-	try {
-		await ngManager.prompt()
-		const proceed = await ngManager.promptProceed()
+	if (!prompts.install) return
 
-		if (!proceed) return
+	await runCommand(
+		ngNewCommand({
+			name: prompts.name,
+			style: prompts.style,
+			bun: prompts.bun,
+		}),
+		true
+	)
 
-		await ngManager.run()
-	} catch (error) {
-		showErrorText(
-			`Error while generating ng new command: ${error instanceof Error ? error.message : String(error)}`
-		)
-	}
+	note(
+		`cd ./${prompts.name}        \n${prompts.bun ? packageManagerRun['bun'] : packageManagerRun[detectPackageManager()]} start`,
+		'Next steps.'
+	)
+	process.exit(0)
 }

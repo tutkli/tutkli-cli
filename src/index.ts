@@ -1,13 +1,13 @@
 #!/usr/bin/env node
 
 import { isCancel, select } from '@clack/prompts'
-import { angularNew } from './features/angular/angular.ts'
+import { setupAngular } from './features/angular/angular.ts'
 import { setupCVA } from './features/cva/cva.ts'
 import { setupPrettier } from './features/prettier/prettier.ts'
 import { setupTailwind } from './features/tailwind/tailwindcss.ts'
 
 const features = {
-	angular: angularNew,
+	angular: setupAngular,
 	prettier: setupPrettier,
 	tailwind: setupTailwind,
 	cva: setupCVA,
