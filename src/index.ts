@@ -1,11 +1,11 @@
 #!/usr/bin/env node
 
-import { select } from '@inquirer/prompts'
+import { isCancel, select } from '@clack/prompts'
+import chalk from 'chalk'
 import { angularNew } from './features/angular/angular.ts'
 import { setupCVA } from './features/cva/cva.ts'
 import { setupPrettier } from './features/prettier/prettier.ts'
 import { setupTailwind } from './features/tailwind/tailwindcss.ts'
-import { showBanner } from './utils/messages.ts'
 
 const features = {
 	angular: angularNew,
@@ -14,37 +14,41 @@ const features = {
 	cva: setupCVA,
 }
 
-type Features = keyof typeof features | 'exit'
+type Feature = keyof typeof features
 
-let isBannerShown = false
+if (!process.argv[2]) {
+	console.log(chalk.blue`
+████████╗██╗   ██╗████████╗██╗  ██╗██╗     ██╗     ██████╗██╗     ██╗
+╚══██╔══╝██║   ██║╚══██╔══╝██║ ██╔╝██║     ██║    ██╔════╝██║     ██║
+   ██║   ██║   ██║   ██║   █████╔╝ ██║     ██║    ██║     ██║     ██║
+   ██║   ██║   ██║   ██║   ██╔═██╗ ██║     ██║    ██║     ██║     ██║
+   ██║   ╚██████╔╝   ██║   ██║  ██╗███████╗██║    ╚██████╗███████╗██║
+   ╚═╝    ╚═════╝    ╚═╝   ╚═╝  ╚═╝╚══════╝╚═╝     ╚═════╝╚══════╝╚═╝
+`)
+}
 
 async function ask() {
-	if (!isBannerShown) {
-		showBanner()
-		isBannerShown = true
-	}
-	console.log('')
-	let selectedFeature: Features = await select({
-		message: 'Which package would you like to install?',
-		choices: [
-			{ name: 'Create Angular', value: 'angular' },
-			{ name: 'Prettier', value: 'prettier' },
-			{ name: 'TailwindCSS', value: 'tailwind' },
-			{ name: 'CVA', value: 'cva' },
-			{ name: 'Exit', value: 'exit' },
-		],
-		loop: true,
-	})
-
-	return selectedFeature
+	return (
+		process.argv[2] ??
+		(await select({
+			message: 'What would you like to do?',
+			options: [
+				{ value: 'angular', label: 'Initialize an Angular project' },
+				{ value: 'prettier', label: 'Setup Prettier' },
+				{ value: 'tailwind', label: 'Setup TailwindCSS' },
+				{ value: 'cva', label: 'Setup CVA' },
+			],
+		}))
+	)
 }
 
 try {
-	let answer = await ask()
-	while (answer !== 'exit') {
-		await features[answer]()
-		answer = await ask()
+	let command = await ask()
+	while (!isCancel(command)) {
+		await features[command as Feature]()
+		command = await ask()
 	}
+	process.exit(0)
 } catch (error) {
 	if (error instanceof Error && error.name === 'ExitPromptError') {
 		// noop; silence this error
