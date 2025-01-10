@@ -30,6 +30,9 @@ export const setupAngular = async () => {
 				text({
 					message: 'What is the name of your project?',
 					placeholder: 'my-project',
+					validate: value => {
+						if (!value) return 'Project name cannot be empty'
+					},
 				}),
 			style: () =>
 				select({
