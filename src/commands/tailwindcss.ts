@@ -1,7 +1,7 @@
 import { confirm, group, intro, note, outro, tasks, text } from '@clack/prompts'
 import chalk from 'chalk'
 import { writeOrUpdateFile } from '../utils/file.ts'
-import { showDeps } from '../utils/prompt.ts'
+import {formatter, goodbye, showDeps} from '../utils/prompt.ts'
 import { runInstallCommand } from '../utils/run-command.ts'
 
 const deps = ['tailwindcss']
@@ -68,7 +68,7 @@ export const setupTailwind = async (): Promise<void> => {
 		},
 		{
 			onCancel: () => {
-				note('Bye!        ')
+				goodbye()
 				process.exit(0)
 			},
 		}
@@ -81,14 +81,14 @@ export const setupTailwind = async (): Promise<void> => {
 			title: 'Installing dependencies...',
 			task: async () => {
 				await runInstallCommand(deps, true)
-				return `${chalk.green('✓')} Dependencies installed.`
+				return formatter.check('Dependencies installed.')
 			},
 		},
 		{
 			title: 'Initializing TailwindCSS...',
 			task: () => {
 				writeOrUpdateFile('tailwind.config.js', twConfig(), true)
-				return `${chalk.green('✓')} TailwindCSS initialized.`
+				return formatter.check('TailwindCSS initialized.')
 			},
 		},
 		{
@@ -98,10 +98,10 @@ export const setupTailwind = async (): Promise<void> => {
 					config.cssPath,
 					twContent({ angular: config.angular })
 				)
-				return `${chalk.green('✓')} TailwindCSS directives added.`
+				return formatter.check('TailwindCSS directives added.')
 			},
 		},
 	])
 
-	outro(chalk.green`TailwindCSS installed successfully!`)
+	outro(formatter.success('TailwindCSS installed successfully!'))
 }

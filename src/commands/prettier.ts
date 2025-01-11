@@ -13,7 +13,7 @@ import {
 	addPackageJsonScript,
 	runPackageJsonScript,
 } from '../utils/package-json.ts'
-import { showDeps } from '../utils/prompt.ts'
+import {formatter, goodbye, showDeps} from '../utils/prompt.ts'
 import { runInstallCommand } from '../utils/run-command.ts'
 
 const deps = (plugins: string[]) => ['prettier', ...plugins]
@@ -70,7 +70,7 @@ export const setupPrettier = async () => {
 		},
 		{
 			onCancel: () => {
-				note('Bye!        ')
+				goodbye()
 				process.exit(0)
 			},
 		}
@@ -83,14 +83,14 @@ export const setupPrettier = async () => {
 			title: 'Installing dependencies...',
 			task: async () => {
 				await runInstallCommand(deps(config.plugins ?? []), true)
-				return `${chalk.green('✓')} Dependencies installed.`
+				return formatter.check('Dependencies installed.')
 			},
 		},
 		{
 			title: `Adding "prettify" script...`,
 			task: () => {
 				addPackageJsonScript('prettify', 'prettier --write .')
-				return `${chalk.green('✓')} Prettify script added.`
+				return formatter.check('Prettify script added.')
 			},
 		},
 		{
@@ -101,18 +101,18 @@ export const setupPrettier = async () => {
 					prettierrc(config.plugins ?? []),
 					true
 				)
-				return `${chalk.green('✓')} ${chalk.italic('.prettierrc.json')} file created.`
+				return formatter.check((`${chalk.italic('.prettierrc.json')} file created.`))
 			},
 		},
 		{
 			title: `Running "prettify" script...`,
 			task: () => {
 				runPackageJsonScript('prettify')
-				return `${chalk.green('✓')} Ran Prettify script.`
+				return formatter.check('Ran Prettify script.')
 			},
 			enabled: config.prettify,
 		},
 	])
 
-	outro(chalk.green`Prettier installed successfully!`)
+	outro(formatter.success('Prettier installed successfully!'))
 }

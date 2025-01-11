@@ -1,4 +1,4 @@
-import { log } from '@clack/prompts'
+import { log, note } from '@clack/prompts'
 import chalk from 'chalk'
 import { getDepsWithVersions } from './npm.ts'
 
@@ -15,3 +15,11 @@ export async function showCommand(command: string) {
 	log.info('The following command will be run:')
 	log.message(chalk.blue.bold(command))
 }
+
+
+export const formatter = {
+	check: (message: string) => `${chalk.green('✓')} ${message}`,
+	success: (message: string) => chalk.green(message),
+}
+
+export const goodbye = () => note('Bye!        ')

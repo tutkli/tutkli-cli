@@ -5,6 +5,7 @@ import { setupAngular } from './commands/angular.ts'
 import { setupCVA } from './commands/cva.ts'
 import { setupPrettier } from './commands/prettier.ts'
 import { setupTailwind } from './commands/tailwindcss.ts'
+import {goodbye} from "./utils/prompt.ts";
 
 const commands = {
 	angular: setupAngular,
@@ -47,7 +48,7 @@ async function main() {
 		await commands[command as Command]()
 		command = await ask()
 	}
-	note('Bye!        ')
+	goodbye()
 	process.exit(0)
 }
 

@@ -1,7 +1,7 @@
 import { confirm, group, intro, note, outro, tasks, text } from '@clack/prompts'
 import chalk from 'chalk'
 import { writeOrUpdateFile } from '../utils/file.ts'
-import { showDeps } from '../utils/prompt.ts'
+import {formatter, goodbye, showDeps} from '../utils/prompt.ts'
 import { runInstallCommand } from '../utils/run-command.ts'
 
 const CVA_UTIL_CONTENT = `import { defineConfig } from "cva";
@@ -36,7 +36,7 @@ export const setupCVA = async () => {
 		},
 		{
 			onCancel: () => {
-				note('Bye!        ')
+				goodbye()
 				process.exit(0)
 			},
 		}
@@ -49,17 +49,17 @@ export const setupCVA = async () => {
 			title: 'Installing dependencies...',
 			task: async () => {
 				await runInstallCommand(deps, true)
-				return `${chalk.green('✓')} Dependencies installed.`
+				return formatter.check('Dependencies installed.')
 			},
 		},
 		{
 			title: 'Creating CVA util file...',
 			task: () => {
 				writeOrUpdateFile(config.path as string, CVA_UTIL_CONTENT)
-				return `${chalk.green('✓')} CVA util file created.`
+				return formatter.check('CVA util file created.')
 			},
 		},
 	])
 
-	outro(chalk.green`CVA installed successfully!`)
+	outro(formatter.success('CVA installed successfully!'))
 }
