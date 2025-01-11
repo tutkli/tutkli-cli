@@ -70,7 +70,7 @@ export const setupPrettier = async () => {
 		},
 		{
 			onCancel: () => {
-				note(`Bye!        `)
+				note('Bye!        ')
 				process.exit(0)
 			},
 		}
@@ -94,14 +94,14 @@ export const setupPrettier = async () => {
 			},
 		},
 		{
-			title: `Creating ${chalk.italic(`.prettierrc.json`)} file....`,
+			title: `Creating ${chalk.italic('.prettierrc.json')} file....`,
 			task: () => {
 				writeOrUpdateFile(
 					'.prettierrc.json',
 					prettierrc(config.plugins ?? []),
 					true
 				)
-				return `${chalk.green('✓')} ${chalk.italic(`.prettierrc.json`)} file created.`
+				return `${chalk.green('✓')} ${chalk.italic('.prettierrc.json')} file created.`
 			},
 		},
 		{

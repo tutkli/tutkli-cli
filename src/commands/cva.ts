@@ -36,7 +36,7 @@ export const setupCVA = async () => {
 		},
 		{
 			onCancel: () => {
-				note(`Bye!        `)
+				note('Bye!        ')
 				process.exit(0)
 			},
 		}

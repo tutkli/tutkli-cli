@@ -70,7 +70,7 @@ export const setupAngular = async () => {
 		},
 		{
 			onCancel: () => {
-				note(`Bye!        `)
+				note('Bye!        ')
 				process.exit(0)
 			},
 		}
@@ -88,7 +88,7 @@ export const setupAngular = async () => {
 	)
 
 	note(
-		`cd ./${prompts.name}        \n${prompts.bun ? packageManagerRun['bun'] : packageManagerRun[detectPackageManager()]} start`,
+		`cd ./${prompts.name}        \n${prompts.bun ? packageManagerRun.bun : packageManagerRun[detectPackageManager()]} start`,
 		'Next steps.'
 	)
 	process.exit(0)

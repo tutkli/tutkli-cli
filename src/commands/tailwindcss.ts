@@ -30,7 +30,7 @@ const extraStyles = {
 }
 
 const twContent = (styles: { [key in keyof typeof extraStyles]: boolean }) => {
-	let base = `@tailwind base;\n@tailwind components;\n@tailwind utilities;\n`
+	let base = '@tailwind base;\n@tailwind components;\n@tailwind utilities;\n'
 	for (const style of Object.keys(styles)) {
 		const castedStyle = style as keyof typeof extraStyles
 		if (styles[castedStyle]) {
@@ -68,7 +68,7 @@ export const setupTailwind = async (): Promise<void> => {
 		},
 		{
 			onCancel: () => {
-				note(`Bye!        `)
+				note('Bye!        ')
 				process.exit(0)
 			},
 		}

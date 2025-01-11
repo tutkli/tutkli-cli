@@ -1,5 +1,5 @@
-import fs from 'fs'
-import path from 'path'
+import fs from 'node:fs'
+import path from 'node:path'
 
 /**
  * Utility to create or overwrite a file in the project directory.
@@ -12,7 +12,7 @@ import path from 'path'
 export function writeOrUpdateFile(
 	relativePath: string,
 	content: string,
-	overwrite: boolean = false
+	overwrite = false
 ): 'success' | 'failure' | 'skipped' {
 	const absolutePath = path.resolve(relativePath)
 

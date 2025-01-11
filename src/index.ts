@@ -47,7 +47,7 @@ async function main() {
 		await commands[command as Command]()
 		command = await ask()
 	}
-	note(`Bye!        `)
+	note('Bye!        ')
 	process.exit(0)
 }
 

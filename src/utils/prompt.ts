@@ -7,7 +7,7 @@ export async function showDeps(deps: string[]) {
 
 	const versionedDeps = await getDepsWithVersions(deps)
 	for (const dep of versionedDeps) {
-		console.log(`${chalk.gray(`│  - `)}${chalk.blue.bold(dep)}`)
+		console.log(`${chalk.gray('│  - ')}${chalk.blue.bold(dep)}`)
 	}
 }
 

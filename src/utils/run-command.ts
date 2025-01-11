@@ -40,7 +40,7 @@ export function runCommand(
  */
 export async function runInstallCommand(
 	dependencies: string[],
-	dev: boolean = true
+	dev = true
 ): Promise<void> {
 	const packageManager = detectPackageManager()
 

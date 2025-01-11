@@ -24,7 +24,7 @@ export async function getDepsWithVersions(dependencies: string[]) {
 	return await Promise.all(
 		dependencies.map(async dep => {
 			const version = await getLatestVersion(dep)
-			return `${dep}${version === 'unknown' ? '' : '@' + version}`
+			return `${dep}${version === 'unknown' ? '' : `@${version}`}`
 		})
 	)
 }
