@@ -1,4 +1,12 @@
-import { confirm, group, intro, multiselect, note, outro } from '@clack/prompts'
+import {
+	confirm,
+	group,
+	intro,
+	multiselect,
+	note,
+	outro,
+	tasks,
+} from '@clack/prompts'
 import chalk from 'chalk'
 import { writeOrUpdateFile } from '../utils/file.ts'
 import {
@@ -7,7 +15,6 @@ import {
 } from '../utils/package-json.ts'
 import { showDeps } from '../utils/prompt.ts'
 import { runInstallCommand } from '../utils/run-command.ts'
-import { loadingSpinner } from '../utils/spinner.ts'
 
 const deps = (plugins: string[]) => ['prettier', ...plugins]
 const prettierrc = (plugins: string[]) => {
@@ -46,6 +53,7 @@ export const setupPrettier = async () => {
 						},
 					],
 					initialValues: ['prettier-plugin-organize-imports'],
+					cursorAt: 'prettier-plugin-tailwindcss',
 				}),
 			prettify: () =>
 				confirm({
@@ -70,32 +78,41 @@ export const setupPrettier = async () => {
 
 	if (!config.install) return
 
-	await loadingSpinner({
-		startText: 'Installing dependencies....',
-		stopText: 'Dependencies installed',
-		fn: () => runInstallCommand(deps(config.plugins ?? []), true),
-	})
+	await tasks([
+		{
+			title: 'Installing dependencies...',
+			task: async () => {
+				await runInstallCommand(deps(config.plugins ?? []), true)
+				return `${chalk.green('✓')} Dependencies installed.`
+			},
+		},
+		{
+			title: `Adding "prettify" script...`,
+			task: () => {
+				addPackageJsonScript('prettify', 'prettier --write .')
+				return `${chalk.green('✓')} Prettify script added.`
+			},
+		},
+		{
+			title: `Creating ${chalk.italic(`.prettierrc.json`)} file....`,
+			task: () => {
+				writeOrUpdateFile(
+					'.prettierrc.json',
+					prettierrc(config.plugins ?? []),
+					true
+				)
+				return `${chalk.green('✓')} ${chalk.italic(`.prettierrc.json`)} file created.`
+			},
+		},
+		{
+			title: `Running "prettify" script...`,
+			task: () => {
+				runPackageJsonScript('prettify')
+				return `${chalk.green('✓')} Ran Prettify script.`
+			},
+			enabled: config.prettify,
+		},
+	])
 
-	await loadingSpinner({
-		startText: `Adding "prettify" script...`,
-		stopText: `Prettify script added`,
-		fn: () => addPackageJsonScript('prettify', 'prettier --write .'),
-	})
-
-	await loadingSpinner({
-		startText: `Creating ${chalk.italic(`.prettierrc.json`)} file....`,
-		stopText: `${chalk.italic(`.prettierrc.json`)} file created`,
-		fn: () =>
-			writeOrUpdateFile('.prettierrc.json', prettierrc(config.plugins), true),
-	})
-
-	if (config.prettify) {
-		await loadingSpinner({
-			startText: `Running "prettify" script...`,
-			stopText: `Ran Prettify script`,
-			fn: () => runPackageJsonScript('prettify'),
-		})
-	}
-
-	outro(chalk.bgHex('#13A10E')`Prettier installed successfully!`)
+	outro(chalk.green`Prettier installed successfully!`)
 }

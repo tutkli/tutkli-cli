@@ -1,9 +1,8 @@
-import { confirm, group, intro, note, outro, text } from '@clack/prompts'
+import { confirm, group, intro, note, outro, tasks, text } from '@clack/prompts'
 import chalk from 'chalk'
 import { writeOrUpdateFile } from '../utils/file.ts'
 import { showDeps } from '../utils/prompt.ts'
 import { runInstallCommand } from '../utils/run-command.ts'
-import { loadingSpinner } from '../utils/spinner.ts'
 
 const deps = ['tailwindcss']
 const twConfig = () => {
@@ -77,24 +76,32 @@ export const setupTailwind = async (): Promise<void> => {
 
 	if (!config.install) return
 
-	await loadingSpinner({
-		startText: 'Installing dependencies....',
-		stopText: 'Dependencies installed',
-		fn: () => runInstallCommand(deps, true),
-	})
+	await tasks([
+		{
+			title: 'Installing dependencies...',
+			task: async () => {
+				await runInstallCommand(deps, true)
+				return `${chalk.green('✓')} Dependencies installed.`
+			},
+		},
+		{
+			title: 'Initializing TailwindCSS...',
+			task: () => {
+				writeOrUpdateFile('tailwind.config.js', twConfig(), true)
+				return `${chalk.green('✓')} TailwindCSS initialized.`
+			},
+		},
+		{
+			title: 'Adding TailwindCSS directives...',
+			task: () => {
+				writeOrUpdateFile(
+					config.cssPath,
+					twContent({ angular: config.angular })
+				)
+				return `${chalk.green('✓')} TailwindCSS directives added.`
+			},
+		},
+	])
 
-	await loadingSpinner({
-		startText: 'Initializing TailwindCSS...',
-		stopText: 'TailwindCSS initialized',
-		fn: () => writeOrUpdateFile('tailwind.config.js', twConfig(), true),
-	})
-
-	await loadingSpinner({
-		startText: 'Adding TailwindCSS directive...',
-		stopText: 'TailwindCSS directives added',
-		fn: () =>
-			writeOrUpdateFile(config.cssPath, twContent({ angular: config.angular })),
-	})
-
-	outro(chalk.bgHex('#13A10E')`TailwindCSS installed successfully!`)
+	outro(chalk.green`TailwindCSS installed successfully!`)
 }
