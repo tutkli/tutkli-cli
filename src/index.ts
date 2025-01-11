@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import { isCancel, select } from '@clack/prompts'
+import { isCancel, log, select } from '@clack/prompts'
 import { setupAngular } from './commands/angular.ts'
 import { setupCVA } from './commands/cva.ts'
 import { setupPrettier } from './commands/prettier.ts'
@@ -30,6 +30,11 @@ if (!process.argv[2]) {
 main().catch(console.error)
 
 async function main() {
+	const argvCommand = process.argv[2]
+	if (argvCommand && !(argvCommand in commands)) {
+		log.error(`Unknown command: ${argvCommand}`)
+	}
+
 	while (true) {
 		const command = await ask()
 		if (isCancel(command)) break
@@ -41,16 +46,16 @@ async function main() {
 }
 
 async function ask() {
-	return (
-		process.argv[2] ??
-		(await select({
-			message: 'What would you like to do?',
-			options: [
-				{ value: 'angular', label: 'Initialize an Angular project' },
-				{ value: 'prettier', label: 'Setup Prettier' },
-				{ value: 'tailwind', label: 'Setup TailwindCSS' },
-				{ value: 'cva', label: 'Setup CVA' },
-			],
-		}))
-	)
+	const argvCommand = process.argv[2]
+	if (argvCommand && argvCommand in commands) return argvCommand
+
+	return await select({
+		message: 'What would you like to do?',
+		options: [
+			{ value: 'angular', label: 'Initialize an Angular project' },
+			{ value: 'prettier', label: 'Setup Prettier' },
+			{ value: 'tailwind', label: 'Setup TailwindCSS' },
+			{ value: 'cva', label: 'Setup CVA' },
+		],
+	})
 }
