@@ -27,6 +27,19 @@ if (!process.argv[2]) {
 `)
 }
 
+main().catch(console.error)
+
+async function main() {
+	while (true) {
+		const command = await ask()
+		if (isCancel(command)) break
+
+		await commands[command as Command]()
+	}
+	goodbye()
+	process.exit(0)
+}
+
 async function ask() {
 	return (
 		process.argv[2] ??
@@ -41,16 +54,3 @@ async function ask() {
 		}))
 	)
 }
-
-async function main() {
-	while (true) {
-		const command = await ask()
-		if (isCancel(command)) break
-
-		await commands[command as Command]()
-	}
-	goodbye()
-	process.exit(0)
-}
-
-main().catch(console.error)
