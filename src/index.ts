@@ -35,6 +35,10 @@ async function main() {
 		log.error(`Unknown command: ${argvCommand}`)
 	}
 
+	if (argvCommand && argvCommand in commands) {
+		await commands[argvCommand as Command]()
+	}
+
 	while (true) {
 		intro()
 		const command = await ask()
@@ -48,9 +52,6 @@ async function main() {
 }
 
 async function ask() {
-	const argvCommand = process.argv[2]
-	if (argvCommand && argvCommand in commands) return argvCommand
-
 	return await select({
 		message: 'What would you like to do?',
 		options: [
