@@ -1,5 +1,5 @@
 import { confirm, group, intro, outro, tasks, text } from '@clack/prompts'
-import { bgCyan, green, italic } from 'picocolors'
+import { bgCyan, gray, green, italic } from 'picocolors'
 import { writeOrUpdateFile } from '../utils/file.ts'
 import { check, goodbye, showDeps } from '../utils/prompt.ts'
 import { runInstallCommand } from '../utils/run-command.ts'
@@ -43,7 +43,7 @@ const twContent = (styles: { [key in keyof typeof extraStyles]: boolean }) => {
 export const setupTailwind = async (): Promise<void> => {
 	intro(bgCyan('  Initializing TailwindCSS...  '))
 
-	const config = await group(
+	const prompts = await group(
 		{
 			cssPath: () =>
 				text({
@@ -72,7 +72,10 @@ export const setupTailwind = async (): Promise<void> => {
 		}
 	)
 
-	if (!config.install) return
+	if (!prompts.install) {
+		outro(gray('TailwindCSS initialization cancelled.'))
+		return
+	}
 
 	await tasks([
 		{
@@ -93,8 +96,8 @@ export const setupTailwind = async (): Promise<void> => {
 			title: 'Adding TailwindCSS directives...',
 			task: () => {
 				writeOrUpdateFile(
-					config.cssPath,
-					twContent({ angular: config.angular })
+					prompts.cssPath,
+					twContent({ angular: prompts.angular })
 				)
 				return check('TailwindCSS directives added.')
 			},

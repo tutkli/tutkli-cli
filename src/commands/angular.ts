@@ -1,5 +1,13 @@
-import { confirm, group, intro, note, select, text } from '@clack/prompts'
-import { bgRed } from 'picocolors'
+import {
+	confirm,
+	group,
+	intro,
+	note,
+	outro,
+	select,
+	text,
+} from '@clack/prompts'
+import { bgRed, gray } from 'picocolors'
 import {
 	detectPackageManager,
 	packageManagerRun,
@@ -8,8 +16,8 @@ import { showCommand } from '../utils/prompt.ts'
 import { runCommand } from '../utils/run-command.ts'
 
 const ngNewCommand = (options: { name: string; style: string; bun: boolean }) =>
-	`ng new ${options.name} --minimal --ssr false --style ${options.style} ${
-		options.bun ? '--package-manager bun' : ''
+	`ng new ${options.name} --minimal --ssr false --style ${options.style}${
+		options.bun ? ' --package-manager bun' : ''
 	} --experimental-zoneless`
 
 /**
@@ -76,7 +84,10 @@ export const setupAngular = async () => {
 		}
 	)
 
-	if (!prompts.install) return
+	if (!prompts.install) {
+		outro(gray('Angular initialization cancelled.'))
+		return
+	}
 
 	await runCommand(
 		ngNewCommand({

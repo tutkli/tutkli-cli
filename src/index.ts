@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import { isCancel, log, select } from '@clack/prompts'
+import { intro, isCancel, log, outro, select } from '@clack/prompts'
 import { setupAngular } from './commands/angular.ts'
 import { setupCVA } from './commands/cva.ts'
 import { setupPrettier } from './commands/prettier.ts'
@@ -36,9 +36,11 @@ async function main() {
 	}
 
 	while (true) {
+		intro()
 		const command = await ask()
 		if (isCancel(command)) break
 
+		outro()
 		await commands[command as Command]()
 	}
 	goodbye()

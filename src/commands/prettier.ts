@@ -6,7 +6,7 @@ import {
 	outro,
 	tasks,
 } from '@clack/prompts'
-import { bgMagenta, green, italic } from 'picocolors'
+import { bgMagenta, gray, green, italic } from 'picocolors'
 import { writeOrUpdateFile } from '../utils/file.ts'
 import {
 	addPackageJsonScript,
@@ -36,7 +36,7 @@ const prettierrc = (plugins: string[]) => {
 export const setupPrettier = async () => {
 	intro(bgMagenta('  Initializing Prettier...  '))
 
-	const config = await group(
+	const prompts = await group(
 		{
 			plugins: () =>
 				multiselect({
@@ -75,13 +75,16 @@ export const setupPrettier = async () => {
 		}
 	)
 
-	if (!config.install) return
+	if (!prompts.install) {
+		outro(gray('Prettier initialization cancelled.'))
+		return
+	}
 
 	await tasks([
 		{
 			title: 'Installing dependencies...',
 			task: async () => {
-				await runInstallCommand(deps(config.plugins ?? []), true)
+				await runInstallCommand(deps(prompts.plugins ?? []), true)
 				return check('Dependencies installed.')
 			},
 		},
@@ -97,7 +100,7 @@ export const setupPrettier = async () => {
 			task: () => {
 				writeOrUpdateFile(
 					'.prettierrc.json',
-					prettierrc(config.plugins ?? []),
+					prettierrc(prompts.plugins ?? []),
 					true
 				)
 				return check(`${italic('.prettierrc.json')} file created.`)
@@ -109,7 +112,7 @@ export const setupPrettier = async () => {
 				runPackageJsonScript('prettify')
 				return check('Ran Prettify script.')
 			},
-			enabled: config.prettify,
+			enabled: prompts.prettify,
 		},
 	])
 

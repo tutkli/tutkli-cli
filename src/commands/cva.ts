@@ -1,5 +1,5 @@
 import { confirm, group, intro, outro, tasks, text } from '@clack/prompts'
-import { bgBlackBright, green } from 'picocolors'
+import { bgBlackBright, gray, green } from 'picocolors'
 import { writeOrUpdateFile } from '../utils/file.ts'
 import { check, goodbye, showDeps } from '../utils/prompt.ts'
 import { runInstallCommand } from '../utils/run-command.ts'
@@ -18,7 +18,7 @@ const deps = ['cva@beta', 'tailwind-merge']
 export const setupCVA = async () => {
 	intro(bgBlackBright('  Initializing CVA...  '))
 
-	const config = await group(
+	const prompts = await group(
 		{
 			path: () =>
 				text({
@@ -42,7 +42,10 @@ export const setupCVA = async () => {
 		}
 	)
 
-	if (!config.install) return
+	if (!prompts.install) {
+		outro(gray('CVA initialization cancelled.'))
+		return
+	}
 
 	await tasks([
 		{
@@ -55,7 +58,7 @@ export const setupCVA = async () => {
 		{
 			title: 'Creating CVA util file...',
 			task: () => {
-				writeOrUpdateFile(config.path as string, CVA_UTIL_CONTENT)
+				writeOrUpdateFile(prompts.path as string, CVA_UTIL_CONTENT)
 				return check('CVA util file created.')
 			},
 		},
