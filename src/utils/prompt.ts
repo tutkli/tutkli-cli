@@ -1,5 +1,5 @@
 import { log, note } from '@clack/prompts'
-import chalk from 'chalk'
+import { blue, bold, gray, green } from 'picocolors'
 import { getDepsWithVersions } from './npm.ts'
 
 export async function showDeps(deps: string[]) {
@@ -7,18 +7,15 @@ export async function showDeps(deps: string[]) {
 
 	const versionedDeps = await getDepsWithVersions(deps)
 	for (const dep of versionedDeps) {
-		console.log(`${chalk.gray('│  - ')}${chalk.blue.bold(dep)}`)
+		console.log(`${gray('│  - ')}${blue(bold(dep))}`)
 	}
 }
 
 export async function showCommand(command: string) {
 	log.info('The following command will be run:')
-	log.message(chalk.blue.bold(command))
+	log.message(blue(bold(command)))
 }
 
-export const formatter = {
-	check: (message: string) => `${chalk.green('✓')} ${message}`,
-	success: (message: string) => chalk.green(message),
-}
+export const check = (message: string) => `${green('✓')} ${message}`
 
 export const goodbye = () => note('Bye!        ')

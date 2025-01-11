@@ -1,7 +1,7 @@
 import { confirm, group, intro, outro, tasks, text } from '@clack/prompts'
-import chalk from 'chalk'
+import { bgCyan, green, italic } from 'picocolors'
 import { writeOrUpdateFile } from '../utils/file.ts'
-import { formatter, goodbye, showDeps } from '../utils/prompt.ts'
+import { check, goodbye, showDeps } from '../utils/prompt.ts'
 import { runInstallCommand } from '../utils/run-command.ts'
 
 const deps = ['tailwindcss']
@@ -41,15 +41,13 @@ const twContent = (styles: { [key in keyof typeof extraStyles]: boolean }) => {
 }
 
 export const setupTailwind = async (): Promise<void> => {
-	intro(
-		chalk.bold.bgHex('#2982AF').hex('#E2E8F0')`  Initializing TailwindCSS...  `
-	)
+	intro(bgCyan('  Initializing TailwindCSS...  '))
 
 	const config = await group(
 		{
 			cssPath: () =>
 				text({
-					message: `Please specify the path to your ${chalk.italic('styles.css')} file:`,
+					message: `Please specify the path to your ${italic('styles.css')} file:`,
 					placeholder: './src/styles.css',
 					defaultValue: './src/styles.css',
 				}),
@@ -81,14 +79,14 @@ export const setupTailwind = async (): Promise<void> => {
 			title: 'Installing dependencies...',
 			task: async () => {
 				await runInstallCommand(deps, true)
-				return formatter.check('Dependencies installed.')
+				return check('Dependencies installed.')
 			},
 		},
 		{
 			title: 'Initializing TailwindCSS...',
 			task: () => {
 				writeOrUpdateFile('tailwind.config.js', twConfig(), true)
-				return formatter.check('TailwindCSS initialized.')
+				return check('TailwindCSS initialized.')
 			},
 		},
 		{
@@ -98,10 +96,10 @@ export const setupTailwind = async (): Promise<void> => {
 					config.cssPath,
 					twContent({ angular: config.angular })
 				)
-				return formatter.check('TailwindCSS directives added.')
+				return check('TailwindCSS directives added.')
 			},
 		},
 	])
 
-	outro(formatter.success('TailwindCSS installed successfully!'))
+	outro(green('TailwindCSS installed successfully!'))
 }

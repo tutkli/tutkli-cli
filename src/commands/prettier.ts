@@ -6,13 +6,13 @@ import {
 	outro,
 	tasks,
 } from '@clack/prompts'
-import chalk from 'chalk'
+import { bgMagenta, green, italic } from 'picocolors'
 import { writeOrUpdateFile } from '../utils/file.ts'
 import {
 	addPackageJsonScript,
 	runPackageJsonScript,
 } from '../utils/package-json.ts'
-import { formatter, goodbye, showDeps } from '../utils/prompt.ts'
+import { check, goodbye, showDeps } from '../utils/prompt.ts'
 import { runInstallCommand } from '../utils/run-command.ts'
 
 const deps = (plugins: string[]) => ['prettier', ...plugins]
@@ -34,7 +34,7 @@ const prettierrc = (plugins: string[]) => {
 }
 
 export const setupPrettier = async () => {
-	intro(chalk.bold.bgHex('#A04967')`  Initializing Prettier...  `)
+	intro(bgMagenta('  Initializing Prettier...  '))
 
 	const config = await group(
 		{
@@ -56,7 +56,7 @@ export const setupPrettier = async () => {
 				}),
 			prettify: () =>
 				confirm({
-					message: `Would you like to run the ${chalk.italic(`"prettify"`)} script after installation?`,
+					message: `Would you like to run the ${italic(`"prettify"`)} script after installation?`,
 					initialValue: true,
 				}),
 			install: async ({ results }) => {
@@ -82,38 +82,36 @@ export const setupPrettier = async () => {
 			title: 'Installing dependencies...',
 			task: async () => {
 				await runInstallCommand(deps(config.plugins ?? []), true)
-				return formatter.check('Dependencies installed.')
+				return check('Dependencies installed.')
 			},
 		},
 		{
 			title: `Adding "prettify" script...`,
 			task: () => {
 				addPackageJsonScript('prettify', 'prettier --write .')
-				return formatter.check('Prettify script added.')
+				return check('Prettify script added.')
 			},
 		},
 		{
-			title: `Creating ${chalk.italic('.prettierrc.json')} file....`,
+			title: `Creating ${italic('.prettierrc.json')} file....`,
 			task: () => {
 				writeOrUpdateFile(
 					'.prettierrc.json',
 					prettierrc(config.plugins ?? []),
 					true
 				)
-				return formatter.check(
-					`${chalk.italic('.prettierrc.json')} file created.`
-				)
+				return check(`${italic('.prettierrc.json')} file created.`)
 			},
 		},
 		{
 			title: `Running "prettify" script...`,
 			task: () => {
 				runPackageJsonScript('prettify')
-				return formatter.check('Ran Prettify script.')
+				return check('Ran Prettify script.')
 			},
 			enabled: config.prettify,
 		},
 	])
 
-	outro(formatter.success('Prettier installed successfully!'))
+	outro(green('Prettier installed successfully!'))
 }

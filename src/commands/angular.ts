@@ -1,5 +1,5 @@
 import { confirm, group, intro, note, select, text } from '@clack/prompts'
-import chalk from 'chalk'
+import { bgRed } from 'picocolors'
 import {
 	detectPackageManager,
 	packageManagerRun,
@@ -22,7 +22,7 @@ const ngNewCommand = (options: { name: string; style: string; bun: boolean }) =>
  * configurations.
  */
 export const setupAngular = async () => {
-	intro(chalk.bold.bgRed`  Initializing Angular...  `)
+	intro(bgRed(`  Initializing Angular...  `))
 
 	const prompts = await group(
 		{
