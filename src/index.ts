@@ -43,10 +43,11 @@ async function ask() {
 }
 
 async function main() {
-	let command = await ask()
-	while (!isCancel(command)) {
+	while (true) {
+		const command = await ask()
+		if (isCancel(command)) break
+
 		await commands[command as Command]()
-		command = await ask()
 	}
 	goodbye()
 	process.exit(0)
