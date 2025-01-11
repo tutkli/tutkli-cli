@@ -1,11 +1,11 @@
 #!/usr/bin/env node
 
-import { isCancel, note, select } from '@clack/prompts'
+import { isCancel, select } from '@clack/prompts'
 import { setupAngular } from './commands/angular.ts'
 import { setupCVA } from './commands/cva.ts'
 import { setupPrettier } from './commands/prettier.ts'
 import { setupTailwind } from './commands/tailwindcss.ts'
-import {goodbye} from "./utils/prompt.ts";
+import { goodbye } from './utils/prompt.ts'
 
 const commands = {
 	angular: setupAngular,

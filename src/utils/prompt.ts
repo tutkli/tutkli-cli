@@ -16,7 +16,6 @@ export async function showCommand(command: string) {
 	log.message(chalk.blue.bold(command))
 }
 
-
 export const formatter = {
 	check: (message: string) => `${chalk.green('✓')} ${message}`,
 	success: (message: string) => chalk.green(message),

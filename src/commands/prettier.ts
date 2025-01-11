@@ -3,7 +3,6 @@ import {
 	group,
 	intro,
 	multiselect,
-	note,
 	outro,
 	tasks,
 } from '@clack/prompts'
@@ -13,7 +12,7 @@ import {
 	addPackageJsonScript,
 	runPackageJsonScript,
 } from '../utils/package-json.ts'
-import {formatter, goodbye, showDeps} from '../utils/prompt.ts'
+import { formatter, goodbye, showDeps } from '../utils/prompt.ts'
 import { runInstallCommand } from '../utils/run-command.ts'
 
 const deps = (plugins: string[]) => ['prettier', ...plugins]
@@ -101,7 +100,9 @@ export const setupPrettier = async () => {
 					prettierrc(config.plugins ?? []),
 					true
 				)
-				return formatter.check((`${chalk.italic('.prettierrc.json')} file created.`))
+				return formatter.check(
+					`${chalk.italic('.prettierrc.json')} file created.`
+				)
 			},
 		},
 		{

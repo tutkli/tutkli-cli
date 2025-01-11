@@ -14,17 +14,17 @@
 		"prepublishOnly": "bun run build",
 		"build": "bun bun.build.js",
 		"build:watch": "bun build ./src/index.ts --outdir ./dist --target node --watch",
-		"biome:check": "biome check",
-		"biome:apply": "biome check --write --unsafe"
+		"prettify": "prettier --write ."
 	},
 	"dependencies": {
 		"@clack/prompts": "^0.9.1",
 		"chalk": "^5.4.1"
 	},
 	"devDependencies": {
-		"@biomejs/biome": "1.9.4",
 		"@types/bun": "latest",
 		"@types/node": "^22.10.5",
+		"prettier": "^3.4.2",
+		"prettier-plugin-organize-imports": "^4.1.0",
 		"typescript": "^5.7.2"
 	},
 	"peerDependencies": {
@@ -33,5 +33,9 @@
 	"engines": {
 		"node": ">=18.0.0"
 	},
-	"files": ["dist/", "README.md", "LICENSE"]
+	"files": [
+		"dist/",
+		"README.md",
+		"LICENSE"
+	]
 }

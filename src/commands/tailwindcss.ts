@@ -1,7 +1,7 @@
-import { confirm, group, intro, note, outro, tasks, text } from '@clack/prompts'
+import { confirm, group, intro, outro, tasks, text } from '@clack/prompts'
 import chalk from 'chalk'
 import { writeOrUpdateFile } from '../utils/file.ts'
-import {formatter, goodbye, showDeps} from '../utils/prompt.ts'
+import { formatter, goodbye, showDeps } from '../utils/prompt.ts'
 import { runInstallCommand } from '../utils/run-command.ts'
 
 const deps = ['tailwindcss']
