@@ -25,8 +25,6 @@ export async function addPackageJsonScript(
 		packageJson.scripts = packageJson.scripts ?? {}
 		packageJson.scripts[scriptName] = scriptCommand
 
-		console.log(packageJson)
-
 		await packageFile.write(JSON.stringify(packageJson, null, '\t'))
 	} catch (error) {
 		if (error instanceof Error && error.message === 'PACKAGE_JSON_NOT_FOUND') {

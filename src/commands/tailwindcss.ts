@@ -87,15 +87,15 @@ export const setupTailwind = async (): Promise<void> => {
 		},
 		{
 			title: 'Initializing TailwindCSS...',
-			task: () => {
-				writeOrUpdateFile('tailwind.config.js', twConfig(), true)
+			task: async () => {
+				await writeOrUpdateFile('tailwind.config.js', twConfig(), true)
 				return check('TailwindCSS initialized.')
 			},
 		},
 		{
 			title: 'Adding TailwindCSS directives...',
-			task: () => {
-				writeOrUpdateFile(
+			task: async () => {
+				await writeOrUpdateFile(
 					prompts.cssPath,
 					twContent({ angular: prompts.angular })
 				)

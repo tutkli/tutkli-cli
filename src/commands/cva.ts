@@ -57,8 +57,8 @@ export const setupCVA = async () => {
 		},
 		{
 			title: 'Creating CVA util file...',
-			task: () => {
-				writeOrUpdateFile(prompts.path as string, CVA_UTIL_CONTENT)
+			task: async () => {
+				await writeOrUpdateFile(prompts.path as string, CVA_UTIL_CONTENT, true)
 				return check('CVA util file created.')
 			},
 		},

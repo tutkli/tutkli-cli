@@ -97,8 +97,8 @@ export const setupPrettier = async () => {
 		},
 		{
 			title: `Creating ${italic('.prettierrc.json')} file....`,
-			task: () => {
-				writeOrUpdateFile(
+			task: async () => {
+				await writeOrUpdateFile(
 					'.prettierrc.json',
 					prettierrc(prompts.plugins ?? []),
 					true
