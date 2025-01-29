@@ -30,7 +30,7 @@ const prettierrc = (plugins: string[]) => {
 		endOfLine: 'auto',
 		plugins: plugins,
 	}
-	return JSON.stringify(config, null, 2)
+	return JSON.stringify(config, null, '\t')
 }
 
 export const setupPrettier = async () => {
@@ -90,8 +90,8 @@ export const setupPrettier = async () => {
 		},
 		{
 			title: `Adding "prettify" script...`,
-			task: () => {
-				addPackageJsonScript('prettify', 'prettier --write .')
+			task: async () => {
+				await addPackageJsonScript('prettify', 'prettier --write .')
 				return check('Prettify script added.')
 			},
 		},

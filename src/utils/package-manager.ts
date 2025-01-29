@@ -14,6 +14,7 @@ export const packageManagerRun = {
 
 export function detectPackageManager(): 'npm' | 'yarn' | 'bun' {
 	if (fs.existsSync('bun.lockb')) return 'bun'
+	if (fs.existsSync('bun.lock')) return 'bun'
 	if (fs.existsSync('yarn.lock')) return 'yarn'
 	if (fs.existsSync('package-lock.json')) return 'npm'
 	return 'npm'

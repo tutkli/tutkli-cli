@@ -1,5 +1,3 @@
-import fs from 'node:fs'
-import path from 'node:path'
 import { detectPackageManager, packageManagerRun } from './package-manager.ts'
 import { runCommand } from './run-command.ts'
 
@@ -11,39 +9,33 @@ import { runCommand } from './run-command.ts'
  * @param scriptName - The name of the script (e.g., "prettify").
  * @param scriptCommand - The command to add or update (e.g., "prettier --write .").
  */
-export function addPackageJsonScript(
+export async function addPackageJsonScript(
 	scriptName: string,
 	scriptCommand: string
-): void {
-	const packageJsonPath = path.resolve('package.json')
-
-	// Check if package.json exists
-	if (!fs.existsSync(packageJsonPath)) {
-		throw new Error(
-			'Error: package.json not found in the current project directory.'
-		)
-	}
-
+): Promise<void> {
 	try {
-		// Read the existing package.json
-		const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'))
+		const packageFile = Bun.file('./package.json')
 
-		// Initialize scripts if it doesn't exist
-		packageJson.scripts = packageJson.scripts || {}
+		if (!(await packageFile.exists())) {
+			throw new Error('PACKAGE_JSON_NOT_FOUND')
+		}
 
-		// Add or overwrite the specific script
+		const packageJson = await packageFile.json()
+
+		packageJson.scripts = packageJson.scripts ?? {}
 		packageJson.scripts[scriptName] = scriptCommand
 
-		// Write the updated package.json back to the disk
-		fs.writeFileSync(
-			packageJsonPath,
-			JSON.stringify(packageJson, null, 2),
-			'utf8'
-		)
+		console.log(packageJson)
+
+		await packageFile.write(JSON.stringify(packageJson, null, '\t'))
 	} catch (error) {
-		console.error(
-			`Error reading or updating package.json: ${error instanceof Error ? error.message : String(error)}`
-		)
+		if (error instanceof Error && error.message === 'PACKAGE_JSON_NOT_FOUND') {
+			console.error('package.json not found in the current project directory.')
+		} else {
+			console.error(
+				`Error reading or updating package.json: ${error instanceof Error ? error.message : String(error)}`
+			)
+		}
 	}
 }
 
