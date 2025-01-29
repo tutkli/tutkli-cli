@@ -11,7 +11,7 @@ const commands = {
 	angular: setupAngular,
 	prettier: setupPrettier,
 	tailwind: setupTailwind,
-	cva: setupCVA,
+	cva: setupCVA
 }
 
 type Command = keyof typeof commands
@@ -58,7 +58,7 @@ async function ask() {
 			{ value: 'angular', label: 'Initialize an Angular project' },
 			{ value: 'prettier', label: 'Setup Prettier' },
 			{ value: 'tailwind', label: 'Setup TailwindCSS' },
-			{ value: 'cva', label: 'Setup CVA' },
-		],
+			{ value: 'cva', label: 'Setup CVA' }
+		]
 	})
 }

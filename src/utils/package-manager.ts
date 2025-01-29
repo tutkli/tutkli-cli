@@ -4,12 +4,12 @@ export const devFlag = (dev: boolean) => (dev ? '-D' : '')
 export const packageManagerInstall = {
 	npm: 'npm install',
 	yarn: 'yarn add',
-	bun: 'bun add',
+	bun: 'bun add'
 }
 export const packageManagerRun = {
 	npm: 'npm run',
 	yarn: 'yarn',
-	bun: 'bun',
+	bun: 'bun'
 }
 
 export function detectPackageManager(): 'npm' | 'yarn' | 'bun' {

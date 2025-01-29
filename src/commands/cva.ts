@@ -24,21 +24,21 @@ export const setupCVA = async () => {
 				text({
 					message: 'Where would you like to add the cva util file?',
 					placeholder: './src/utils/cva.ts',
-					defaultValue: './src/utils/cva.ts',
+					defaultValue: './src/utils/cva.ts'
 				}),
 			install: async () => {
 				await showDeps(deps)
 				return confirm({
 					message: 'Proceed with the installation?',
-					initialValue: true,
+					initialValue: true
 				})
-			},
+			}
 		},
 		{
 			onCancel: () => {
 				goodbye()
 				process.exit(0)
-			},
+			}
 		}
 	)
 
@@ -53,15 +53,15 @@ export const setupCVA = async () => {
 			task: async () => {
 				await runInstallCommand(deps, true)
 				return check('Dependencies installed.')
-			},
+			}
 		},
 		{
 			title: 'Creating CVA util file...',
 			task: async () => {
 				await writeOrUpdateFile(prompts.path as string, CVA_UTIL_CONTENT, true)
 				return check('CVA util file created.')
-			},
-		},
+			}
+		}
 	])
 
 	outro(green('CVA installed successfully!'))

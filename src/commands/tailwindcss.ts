@@ -10,9 +10,9 @@ const twConfig = () => {
 		content: ['./src/**/*.{html,ts}'],
 		darkMode: 'class',
 		theme: {
-			extend: {},
+			extend: {}
 		},
-		plugins: [],
+		plugins: []
 	}
 	return `/** @type {import('tailwindcss').Config} */
 module.exports = ${JSON.stringify(config, null, 2)}`
@@ -26,7 +26,7 @@ const extraStyles = {
 .mat-mdc-icon-button {
   line-height: normal;
 }
-`,
+`
 }
 
 const twContent = (styles: { [key in keyof typeof extraStyles]: boolean }) => {
@@ -49,26 +49,26 @@ export const setupTailwind = async (): Promise<void> => {
 				text({
 					message: `Please specify the path to your ${italic('styles.css')} file:`,
 					placeholder: './src/styles.css',
-					defaultValue: './src/styles.css',
+					defaultValue: './src/styles.css'
 				}),
 			angular: () =>
 				confirm({
 					message: 'Are you using Tailwind alongside Angular Material 3?',
-					initialValue: false,
+					initialValue: false
 				}),
 			install: async () => {
 				await showDeps(deps)
 				return confirm({
 					message: 'Proceed with the installation?',
-					initialValue: true,
+					initialValue: true
 				})
-			},
+			}
 		},
 		{
 			onCancel: () => {
 				goodbye()
 				process.exit(0)
-			},
+			}
 		}
 	)
 
@@ -83,14 +83,14 @@ export const setupTailwind = async (): Promise<void> => {
 			task: async () => {
 				await runInstallCommand(deps, true)
 				return check('Dependencies installed.')
-			},
+			}
 		},
 		{
 			title: 'Initializing TailwindCSS...',
 			task: async () => {
 				await writeOrUpdateFile('tailwind.config.js', twConfig(), true)
 				return check('TailwindCSS initialized.')
-			},
+			}
 		},
 		{
 			title: 'Adding TailwindCSS directives...',
@@ -100,8 +100,8 @@ export const setupTailwind = async (): Promise<void> => {
 					twContent({ angular: prompts.angular })
 				)
 				return check('TailwindCSS directives added.')
-			},
-		},
+			}
+		}
 	])
 
 	outro(green('TailwindCSS installed successfully!'))

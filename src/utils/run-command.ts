@@ -2,7 +2,7 @@ import { spawn } from 'node:child_process'
 import {
 	detectPackageManager,
 	devFlag,
-	packageManagerInstall,
+	packageManagerInstall
 } from './package-manager.ts'
 
 export function runCommand(
@@ -12,7 +12,7 @@ export function runCommand(
 	return new Promise((resolve, reject) => {
 		const process = spawn(command, {
 			shell: true,
-			stdio: showStdio ? 'inherit' : 'ignore',
+			stdio: showStdio ? 'inherit' : 'ignore'
 		})
 
 		process.on('error', error => {

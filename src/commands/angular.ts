@@ -5,12 +5,12 @@ import {
 	note,
 	outro,
 	select,
-	text,
+	text
 } from '@clack/prompts'
 import { bgRed, gray } from 'picocolors'
 import {
 	detectPackageManager,
-	packageManagerRun,
+	packageManagerRun
 } from '../utils/package-manager.ts'
 import { showCommand } from '../utils/prompt.ts'
 import { runCommand } from '../utils/run-command.ts'
@@ -30,7 +30,7 @@ const ngNewCommand = (options: { name: string; style: string; bun: boolean }) =>
  * configurations.
  */
 export const setupAngular = async () => {
-	intro(bgRed(`  Initializing Angular...  `))
+	intro(bgRed('  Initializing Angular...  '))
 
 	const prompts = await group(
 		{
@@ -40,21 +40,21 @@ export const setupAngular = async () => {
 					placeholder: 'my-project',
 					validate: value => {
 						if (!value) return 'Project name cannot be empty'
-					},
+					}
 				}),
 			style: () =>
 				select({
 					message: 'Which stylesheet format would you like to use?',
 					options: [
 						{ value: 'css', label: 'CSS' },
-						{ value: 'scss', label: 'SCSS' },
+						{ value: 'scss', label: 'SCSS' }
 					],
-					initialValue: 'css',
+					initialValue: 'css'
 				}),
 			bun: () =>
 				confirm({
 					message: 'Would you like to use bun as package manager?',
-					initialValue: true,
+					initialValue: true
 				}),
 			install: async ({ results }) => {
 				if (
@@ -67,20 +67,20 @@ export const setupAngular = async () => {
 					ngNewCommand({
 						name: results.name,
 						style: results.style,
-						bun: results.bun,
+						bun: results.bun
 					})
 				)
 				return confirm({
 					message: 'Proceed with the installation?',
-					initialValue: true,
+					initialValue: true
 				})
-			},
+			}
 		},
 		{
 			onCancel: () => {
 				note('Bye!        ')
 				process.exit(0)
-			},
+			}
 		}
 	)
 
@@ -93,7 +93,7 @@ export const setupAngular = async () => {
 		ngNewCommand({
 			name: prompts.name,
 			style: prompts.style,
-			bun: prompts.bun,
+			bun: prompts.bun
 		}),
 		true
 	)
