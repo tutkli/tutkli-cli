@@ -1,20 +1,14 @@
 import { confirm, group, intro, note, outro, select, text } from '@clack/prompts'
-import type { DetectResult } from 'package-manager-detector'
 import { resolveCommand } from 'package-manager-detector/commands'
 import { bgRed, gray } from 'picocolors'
 import { x } from 'tinyexec'
 import { detectPm } from '../utils/pm.ts'
 import { showCommand } from '../utils/prompt.ts'
+import type { Agent } from '@antfu/install-pkg'
 
-const getNgNew = (options: {
-	pm: DetectResult
-	name: string
-	style: string
-	bun: boolean
-}) =>
-	resolveCommand(options.bun ? 'bun' : options.pm.agent, 'execute', [
-		'@angular/cli',
-		'new',
+const NG_NEW = 'ng new'
+const NG_NEW_ARGS = (options: { name: string; style: string; pm: Agent }) => {
+	return [
 		options.name,
 		'--minimal',
 		'--ssr',
@@ -23,8 +17,9 @@ const getNgNew = (options: {
 		options.style,
 		'--experimental-zoneless',
 		'--package-manager',
-		options.bun ? 'bun' : options.pm.agent
-	])
+		options.pm
+	]
+}
 
 /**
  * Asynchronously initializes the creation of a new Angular project.
@@ -68,14 +63,12 @@ export const setupAngular = async () => {
 				if (results.name === undefined || results.style === undefined || results.bun === undefined)
 					return false
 
-				const ngNew = getNgNew({
-					pm,
+				const args = NG_NEW_ARGS({
 					name: results.name,
 					style: results.style,
-					bun: results.bun
+					pm: results.bun ? 'bun' : pm.agent
 				})
-
-				if (ngNew) showCommand(`${ngNew.command}${ngNew.args.join(' ')}`)
+				showCommand(`${NG_NEW} ${args.join(' ')}`)
 
 				return confirm({
 					message: 'Proceed with the installation?',
@@ -96,22 +89,17 @@ export const setupAngular = async () => {
 		return
 	}
 
-	const ngNew = getNgNew({
-		pm,
+	const args = NG_NEW_ARGS({
 		name: prompts.name,
 		style: prompts.style,
-		bun: prompts.bun
+		pm: prompts.bun ? 'bun' : pm.agent
+	})
+	await x(NG_NEW, args, {
+		nodeOptions: { stdio: 'inherit' },
+		throwOnError: true
 	})
 
-	if (ngNew) {
-		await x(ngNew.command, ngNew.args, {
-			nodeOptions: { stdio: 'inherit' },
-			throwOnError: true
-		})
-	}
-
 	const startCommand = resolveCommand(prompts.bun ? 'bun' : pm.agent, 'run', ['start'])
-
 	note(
 		`cd ./${prompts.name}        \n${startCommand?.command} ${startCommand?.args.join(' ')}`,
 		'Next steps.'
