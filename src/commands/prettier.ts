@@ -26,7 +26,7 @@ const prettierrc = (plugins: string[]) => {
 		trailingComma: 'es5',
 		bracketSameLine: true,
 		htmlWhitespaceSensitivity: 'ignore',
-		printWidth: 80,
+		printWidth: 100,
 		endOfLine: 'auto',
 		plugins: plugins
 	}
