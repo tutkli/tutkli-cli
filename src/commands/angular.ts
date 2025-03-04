@@ -1,18 +1,10 @@
-import {
-	confirm,
-	group,
-	intro,
-	note,
-	outro,
-	select,
-	text
-} from '@clack/prompts'
+import { confirm, group, intro, note, outro, select, text } from '@clack/prompts'
+import type { DetectResult } from 'package-manager-detector'
+import { resolveCommand } from 'package-manager-detector/commands'
 import { bgRed, gray } from 'picocolors'
+import { x } from 'tinyexec'
 import { detectPm } from '../utils/pm.ts'
 import { showCommand } from '../utils/prompt.ts'
-import { resolveCommand } from 'package-manager-detector/commands'
-import { x } from 'tinyexec'
-import type { DetectResult } from 'package-manager-detector'
 
 const getNgNew = (options: {
 	pm: DetectResult
@@ -73,11 +65,7 @@ export const setupAngular = async () => {
 					initialValue: true
 				}),
 			install: async ({ results }) => {
-				if (
-					results.name === undefined ||
-					results.style === undefined ||
-					results.bun === undefined
-				)
+				if (results.name === undefined || results.style === undefined || results.bun === undefined)
 					return false
 
 				const ngNew = getNgNew({
@@ -122,9 +110,7 @@ export const setupAngular = async () => {
 		})
 	}
 
-	const startCommand = resolveCommand(prompts.bun ? 'bun' : pm.agent, 'run', [
-		'start'
-	])
+	const startCommand = resolveCommand(prompts.bun ? 'bun' : pm.agent, 'run', ['start'])
 
 	note(
 		`cd ./${prompts.name}        \n${startCommand?.command} ${startCommand?.args.join(' ')}`,

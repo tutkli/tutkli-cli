@@ -1,4 +1,4 @@
-import { installPackage } from "@antfu/install-pkg";
+import { installPackage } from '@antfu/install-pkg'
 import { confirm, group, intro, outro, tasks, text } from '@clack/prompts'
 import { bgCyan, gray, green, italic } from 'picocolors'
 import { writeOrUpdateFile } from '../utils/file.ts'
@@ -94,10 +94,7 @@ export const setupTailwind = async (): Promise<void> => {
 		{
 			title: 'Adding TailwindCSS directives...',
 			task: async () => {
-				await writeOrUpdateFile(
-					prompts.cssPath,
-					twContent({ angular: prompts.angular })
-				)
+				await writeOrUpdateFile(prompts.cssPath, twContent({ angular: prompts.angular }))
 				return check('TailwindCSS directives added.')
 			}
 		}

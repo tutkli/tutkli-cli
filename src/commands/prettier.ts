@@ -1,19 +1,9 @@
-import {
-	confirm,
-	group,
-	intro,
-	multiselect,
-	outro,
-	tasks
-} from '@clack/prompts'
+import { installPackage } from '@antfu/install-pkg'
+import { confirm, group, intro, multiselect, outro, tasks } from '@clack/prompts'
 import { bgMagenta, gray, green, italic } from 'picocolors'
 import { writeOrUpdateFile } from '../utils/file.ts'
-import {
-	addPackageJsonScript,
-	runPackageJsonScript
-} from '../utils/package-json.ts'
+import { addPackageJsonScript, runPackageJsonScript } from '../utils/package-json.ts'
 import { check, goodbye, showDeps } from '../utils/prompt.ts'
-import { installPackage } from '@antfu/install-pkg'
 
 const deps = (plugins: string[]) => ['prettier', ...plugins]
 const prettierrc = (plugins: string[]) => {
@@ -101,11 +91,7 @@ export const setupPrettier = async () => {
 		{
 			title: `Creating ${italic('.prettierrc.json')} file....`,
 			task: async () => {
-				await writeOrUpdateFile(
-					'.prettierrc.json',
-					prettierrc(prompts.plugins ?? []),
-					true
-				)
+				await writeOrUpdateFile('.prettierrc.json', prettierrc(prompts.plugins ?? []), true)
 				return check(`${italic('.prettierrc.json')} file created.`)
 			}
 		},

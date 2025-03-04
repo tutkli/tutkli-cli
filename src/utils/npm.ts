@@ -3,9 +3,7 @@
  * @param {string} depName - The name of the dependency.
  * @returns {Promise<string|'unknown'>} - A promise that resolves to the latest version.
  */
-export async function getLatestVersion(
-	depName: string
-): Promise<string | 'unknown'> {
+export async function getLatestVersion(depName: string): Promise<string | 'unknown'> {
 	try {
 		const response = await fetch(`https://registry.npmjs.org/${depName}`)
 		const data = await response.json()

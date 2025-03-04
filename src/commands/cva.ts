@@ -1,8 +1,8 @@
+import { installPackage } from '@antfu/install-pkg'
 import { confirm, group, intro, outro, tasks, text } from '@clack/prompts'
 import { bgBlackBright, gray, green } from 'picocolors'
 import { writeOrUpdateFile } from '../utils/file.ts'
 import { check, goodbye, showDeps } from '../utils/prompt.ts'
-import {installPackage} from "@antfu/install-pkg";
 
 const CVA_UTIL_CONTENT = `import { defineConfig } from "cva";
 import { twMerge } from "tailwind-merge";
