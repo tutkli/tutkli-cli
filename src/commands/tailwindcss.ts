@@ -1,9 +1,8 @@
+import { installPackage } from "@antfu/install-pkg";
 import { confirm, group, intro, outro, tasks, text } from '@clack/prompts'
 import { bgCyan, gray, green, italic } from 'picocolors'
 import { writeOrUpdateFile } from '../utils/file.ts'
 import { check, goodbye, showDeps } from '../utils/prompt.ts'
-import { runInstallCommand } from '../utils/run-command.ts'
-
 const deps = ['tailwindcss']
 const twConfig = () => {
 	const config = {
@@ -81,7 +80,7 @@ export const setupTailwind = async (): Promise<void> => {
 		{
 			title: 'Installing dependencies...',
 			task: async () => {
-				await runInstallCommand(deps, true)
+				await installPackage(deps, { silent: true, dev: true })
 				return check('Dependencies installed.')
 			}
 		},
