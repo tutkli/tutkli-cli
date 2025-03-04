@@ -45,7 +45,6 @@ export async function addPackageJsonScript(
  */
 export async function runPackageJsonScript(scriptName: string): Promise<void> {
 	const pm = await detectPm()
-	if (!pm) throw new Error('Could not detect package manager')
 
 	const command = resolveCommand(pm.agent, 'run', [scriptName])
 	if (!command) throw new Error('Could not resolve command')
