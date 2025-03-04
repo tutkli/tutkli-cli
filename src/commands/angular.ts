@@ -8,17 +8,31 @@ import {
 	text
 } from '@clack/prompts'
 import { bgRed, gray } from 'picocolors'
-import {
-	detectPackageManager,
-	packageManagerRun
-} from '../utils/package-manager.ts'
+import { detectPm } from '../utils/pm.ts'
 import { showCommand } from '../utils/prompt.ts'
-import { runCommand } from '../utils/run-command.ts'
+import { resolveCommand } from 'package-manager-detector/commands'
+import { x } from 'tinyexec'
+import type { DetectResult } from 'package-manager-detector'
 
-const ngNewCommand = (options: { name: string; style: string; bun: boolean }) =>
-	`ng new ${options.name} --minimal --ssr false --style ${options.style}${
-		options.bun ? ' --package-manager bun' : ''
-	} --experimental-zoneless`
+const getNgNew = (options: {
+	pm: DetectResult
+	name: string
+	style: string
+	bun: boolean
+}) =>
+	resolveCommand(options.bun ? 'bun' : options.pm.agent, 'execute', [
+		'@angular/cli',
+		'new',
+		options.name,
+		'--minimal',
+		'--ssr',
+		'false',
+		'--style',
+		options.style,
+		'--experimental-zoneless',
+		'--package-manager',
+		options.bun ? 'bun' : options.pm.agent
+	])
 
 /**
  * Asynchronously initializes the creation of a new Angular project.
@@ -31,6 +45,8 @@ const ngNewCommand = (options: { name: string; style: string; bun: boolean }) =>
  */
 export const setupAngular = async () => {
 	intro(bgRed('  Initializing Angular...  '))
+
+	const pm = await detectPm()
 
 	const prompts = await group(
 		{
@@ -63,13 +79,16 @@ export const setupAngular = async () => {
 					results.bun === undefined
 				)
 					return false
-				await showCommand(
-					ngNewCommand({
-						name: results.name,
-						style: results.style,
-						bun: results.bun
-					})
-				)
+
+				const ngNew = getNgNew({
+					pm,
+					name: results.name,
+					style: results.style,
+					bun: results.bun
+				})
+
+				if (ngNew) showCommand(`${ngNew.command}${ngNew.args.join(' ')}`)
+
 				return confirm({
 					message: 'Proceed with the installation?',
 					initialValue: true
@@ -89,17 +108,26 @@ export const setupAngular = async () => {
 		return
 	}
 
-	await runCommand(
-		ngNewCommand({
-			name: prompts.name,
-			style: prompts.style,
-			bun: prompts.bun
-		}),
-		true
-	)
+	const ngNew = getNgNew({
+		pm,
+		name: prompts.name,
+		style: prompts.style,
+		bun: prompts.bun
+	})
+
+	if (ngNew) {
+		await x(ngNew.command, ngNew.args, {
+			nodeOptions: { stdio: 'inherit' },
+			throwOnError: true
+		})
+	}
+
+	const startCommand = resolveCommand(prompts.bun ? 'bun' : pm.agent, 'run', [
+		'start'
+	])
 
 	note(
-		`cd ./${prompts.name}        \n${prompts.bun ? packageManagerRun.bun : packageManagerRun[detectPackageManager()]} start`,
+		`cd ./${prompts.name}        \n${startCommand?.command} ${startCommand?.args.join(' ')}`,
 		'Next steps.'
 	)
 	process.exit(0)

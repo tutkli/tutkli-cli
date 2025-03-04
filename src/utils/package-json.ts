@@ -1,5 +1,6 @@
-import { detectPackageManager, packageManagerRun } from './package-manager.ts'
-import { runCommand } from './run-command.ts'
+import { resolveCommand } from 'package-manager-detector/commands'
+import { x } from 'tinyexec'
+import { detectPm } from './pm.ts'
 
 /**
  * Adds or updates a script in the project's package.json.
@@ -38,17 +39,22 @@ export async function addPackageJsonScript(
 }
 
 /**
- * Runs a package.json script using the appropriate package manager with optional confirmation.
+ * Runs a package.json script using the appropriate package manager.
  *
  * @param scriptName - The name of the script to run (e.g., "prettify").
  */
 export async function runPackageJsonScript(scriptName: string): Promise<void> {
-	const packageManager = detectPackageManager()
+	const pm = await detectPm()
+	if (!pm) throw new Error('Could not detect package manager')
 
-	const command = `${packageManagerRun[packageManager]} ${scriptName}`
+	const command = resolveCommand(pm.agent, 'run', [scriptName])
+	if (!command) throw new Error('Could not resolve command')
 
 	try {
-		await runCommand(command)
+		await x(command.command, command.args, {
+			nodeOptions: { stdio: 'ignore' },
+			throwOnError: true
+		})
 	} catch (error) {
 		console.error(
 			`Failed to run '${scriptName}' script: ${

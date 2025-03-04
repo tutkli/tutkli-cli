@@ -11,7 +11,7 @@ export async function showDeps(deps: string[]) {
 	}
 }
 
-export async function showCommand(command: string) {
+export function showCommand(command: string) {
 	log.info('The following command will be run:')
 	log.message(blue(bold(command)))
 }

@@ -13,7 +13,7 @@ import {
 	runPackageJsonScript
 } from '../utils/package-json.ts'
 import { check, goodbye, showDeps } from '../utils/prompt.ts'
-import {installPackage} from "@antfu/install-pkg";
+import { installPackage } from '@antfu/install-pkg'
 
 const deps = (plugins: string[]) => ['prettier', ...plugins]
 const prettierrc = (plugins: string[]) => {
@@ -84,7 +84,10 @@ export const setupPrettier = async () => {
 		{
 			title: 'Installing dependencies...',
 			task: async () => {
-				await installPackage(deps(prompts.plugins ?? []), { silent: true, dev: true })
+				await installPackage(deps(prompts.plugins ?? []), {
+					silent: true,
+					dev: true
+				})
 				return check('Dependencies installed.')
 			}
 		},
